@@ -1,0 +1,16 @@
+# Vídeos, áudios e saídas de trabalho de cada edição
+*.mp4
+*.mov
+*.wav
+!motions/sons/*.wav
+*.flac
+*.m4a
+*.mp3
+_edicao/
+partes/
+saida_webm/
+previa/
+motions/imagens/*
+!motions/imagens/.gitkeep
+node_modules/
+__pycache__/

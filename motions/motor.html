@@ -1,0 +1,776 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Motor de Motions · Vitor Menoli</title>
+<style>
+  @font-face { font-family: "Space Grotesk"; font-weight: 500; src: url("fontes/space-grotesk-latin-500-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Space Grotesk"; font-weight: 700; src: url("fontes/space-grotesk-latin-700-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Inter"; font-weight: 400; src: url("fontes/inter-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Inter"; font-weight: 500; src: url("fontes/inter-latin-500-normal.woff2") format("woff2"); }
+  @font-face { font-family: "JetBrains Mono"; font-weight: 400; src: url("fontes/jetbrains-mono-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family: "JetBrains Mono"; font-weight: 500; src: url("fontes/jetbrains-mono-latin-500-normal.woff2") format("woff2"); }
+  @font-face { font-family: "JetBrains Mono"; font-weight: 700; src: url("fontes/jetbrains-mono-latin-700-normal.woff2") format("woff2"); }
+
+  :root {
+    --cor-fundo: #0A0A0A;
+    --cor-grafite: #111312;
+    --cor-verde: #1CFC77;
+    --cor-verde-escuro: rgba(28, 252, 119, 0.12);
+    --cor-verde-borda: rgba(28, 252, 119, 0.55);
+    --cor-texto: #F2F2F2;
+    --cor-cinza: #9BA19D;
+    --cor-cinza-escuro: #3A3F3C;
+    --cor-vermelho: #FF5A5F;
+    --cor-amarelo: #FFC53D;
+  }
+  html, body { margin: 0; padding: 0; width: 1920px; height: 1080px; overflow: hidden; background: transparent; }
+  body { font-family: "Inter", sans-serif; color: var(--cor-texto); -webkit-font-smoothing: antialiased; }
+  #palco { position: absolute; inset: 0; }
+
+  .fundo-cheio {
+    position: absolute; inset: 0; background-color: var(--cor-fundo);
+    background-image:
+      radial-gradient(ellipse 60% 50% at 50% 45%, rgba(28, 252, 119, 0.10), rgba(28, 252, 119, 0) 70%),
+      linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 100% 100%, 48px 48px, 48px 48px;
+  }
+  .marca-dagua { position: absolute; font-family: "JetBrains Mono", monospace; font-size: 20px; letter-spacing: 0.08em; color: var(--cor-cinza); }
+
+  .mascara-linha { display: block; overflow: hidden; line-height: 1.08; padding-bottom: 0.06em; }
+  .mascara-linha > span { display: inline-block; will-change: transform; }
+  .palavra { display: inline-block; white-space: pre; }
+
+  .cartao {
+    position: absolute; background: rgba(10, 10, 10, 0.92); border: 1px solid var(--cor-verde-borda); border-radius: 18px;
+    box-shadow: 0 0 0 1px rgba(28, 252, 119, 0.08), 0 0 48px rgba(28, 252, 119, 0.14), 0 24px 60px rgba(0, 0, 0, 0.55);
+    overflow: hidden;
+  }
+  .cartao-grade {
+    position: absolute; inset: 0; opacity: 0.6;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .rotulo-mono { font-family: "JetBrains Mono", monospace; font-weight: 500; font-size: 18px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cor-cinza); }
+  .rotulo-verde { color: var(--cor-verde); }
+  .titulo-grande { font-family: "Space Grotesk", sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: -0.01em; }
+  .destaque { color: var(--cor-verde); }
+
+  .pilula {
+    position: absolute; display: inline-flex; align-items: center; gap: 14px; white-space: nowrap;
+    padding: 14px 26px; border-radius: 999px; background: rgba(10, 10, 10, 0.9);
+    border: 1.5px solid var(--cor-verde-borda);
+    box-shadow: inset 0 0 0 999px var(--cor-verde-escuro), 0 0 28px rgba(28, 252, 119, 0.18), 0 12px 30px rgba(0, 0, 0, 0.5);
+    font-family: "JetBrains Mono", monospace; font-weight: 500; font-size: 30px; color: var(--cor-verde);
+  }
+  .pilula .ponto { width: 10px; height: 10px; border-radius: 50%; background: var(--cor-verde); box-shadow: 0 0 10px var(--cor-verde); }
+  .pilula-rotulo { position: absolute; font-family: "JetBrains Mono", monospace; font-size: 16px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cor-cinza); white-space: nowrap; }
+
+  .terminal-barra { display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 20px; border-bottom: 1px solid rgba(28, 252, 119, 0.22); background: rgba(255, 255, 255, 0.02); position: relative; }
+  .terminal-bolinha { width: 12px; height: 12px; border-radius: 50%; background: var(--cor-cinza-escuro); }
+  .terminal-bolinha.verde { background: var(--cor-verde); }
+  .terminal-titulo { font-family: "JetBrains Mono", monospace; font-size: 16px; letter-spacing: 0.1em; color: var(--cor-cinza); margin-left: 8px; }
+  .terminal-corpo { position: relative; padding: 26px 30px 30px; font-family: "JetBrains Mono", monospace; font-size: 34px; color: var(--cor-texto); white-space: pre; }
+  .terminal-prompt { color: var(--cor-verde); }
+  .cursor { display: inline-block; width: 0.55em; height: 1.05em; background: var(--cor-verde); vertical-align: -0.16em; margin-left: 2px; }
+
+  .numero-grande { font-family: "Space Grotesk", sans-serif; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .barra-trilho { position: relative; height: 18px; border-radius: 999px; background: rgba(255, 255, 255, 0.06); overflow: hidden; }
+  .barra-preenchimento { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; }
+
+  .linha-capitulo { position: absolute; height: 2px; background: var(--cor-verde); box-shadow: 0 0 12px var(--cor-verde); transform-origin: left center; }
+  .no-grafo { position: absolute; border-radius: 50%; }
+  svg { position: absolute; overflow: visible; }
+</style>
+</head>
+<body>
+<div id="palco"></div>
+<script>
+/* Marca d'água dos motions de tela cheia e do cartão de abertura: troque pelo nome do seu canal. */
+const MARCA_DAGUA = "› VITOR MENOLI";
+
+"use strict";
+
+const QUADROS_POR_SEGUNDO = 30;
+const palco = document.getElementById("palco");
+let motionAtual = null;
+
+/* ---------- utilidades de tempo e suavização ---------- */
+function limitar(valor, minimo, maximo) { return Math.min(maximo, Math.max(minimo, valor)); }
+function progresso(tempo, inicio, duracao) { return limitar((tempo - inicio) / duracao, 0, 1); }
+function suavizarSaida(p) { return 1 - Math.pow(1 - p, 3); }
+function suavizarEntradaSaida(p) { return p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2; }
+function suavizarMola(p) {
+  if (p <= 0) return 0;
+  if (p >= 1) return 1;
+  return 1 - Math.cos(p * Math.PI * 2.2) * Math.exp(-6 * p);
+}
+function interpolar(a, b, p) { return a + (b - a) * p; }
+function formatarNumeroBrasileiro(valor, casasDecimais) {
+  return valor.toLocaleString("pt-BR", { minimumFractionDigits: casasDecimais, maximumFractionDigits: casasDecimais });
+}
+function criarElemento(tag, classe, conteudo) {
+  const elemento = document.createElement(tag);
+  if (classe) elemento.className = classe;
+  if (conteudo !== undefined) elemento.innerHTML = conteudo;
+  return elemento;
+}
+function posicionar(elemento, propriedades) { Object.assign(elemento.style, propriedades); return elemento; }
+
+/* Visibilidade padrão de todo motion: entra no início e sai no fim da duração. */
+function opacidadeEntradaSaida(tempo, duracaoTotal, tempoEntrada, tempoSaida) {
+  const entrada = progresso(tempo, 0, tempoEntrada);
+  const saida = 1 - progresso(tempo, duracaoTotal - tempoSaida, tempoSaida);
+  return Math.min(entrada, saida);
+}
+
+/* Texto que sobe de dentro de uma máscara, palavra por palavra (regra do CLAUDE.md, sem fade). */
+function criarLinhaMascarada(textoComDestaque, classeExtra) {
+  const linha = criarElemento("span", "mascara-linha " + (classeExtra || ""));
+  const interno = criarElemento("span");
+  const palavras = [];
+  textoComDestaque.split(/(\*[^*]+\*)/).forEach(function (trecho) {
+    if (trecho === "") return;
+    const trechoEhDestaque = trecho.startsWith("*") && trecho.endsWith("*") && trecho.length > 2;
+    const textoDoTrecho = trechoEhDestaque ? trecho.slice(1, -1) : trecho;
+    textoDoTrecho.split(/(\s+)/).forEach(function (pedaco) {
+      if (pedaco === "") return;
+      if (pedaco.trim() === "") { interno.appendChild(document.createTextNode(pedaco)); return; }
+      const palavra = criarElemento("span", "palavra" + (trechoEhDestaque ? " destaque" : ""), pedaco);
+      palavras.push(palavra);
+      interno.appendChild(palavra);
+    });
+  });
+  linha.appendChild(interno);
+  return { linha: linha, palavras: palavras };
+}
+function animarPalavrasMascaradas(palavras, tempo, inicio, intervaloEntrePalavras, duracaoSubida, tempoSaidaInicio, duracaoSaida) {
+  palavras.forEach(function (palavra, indice) {
+    const subida = suavizarSaida(progresso(tempo, inicio + indice * intervaloEntrePalavras, duracaoSubida));
+    const descida = suavizarEntradaSaida(progresso(tempo, tempoSaidaInicio, duracaoSaida));
+    const deslocamento = (1 - subida) * 110 + descida * 110;
+    palavra.style.transform = "translateY(" + deslocamento + "%)";
+  });
+}
+
+/* ---------- modelos de motion ---------- */
+const modelos = {};
+
+/* Cartão de abertura com o título do vídeo. */
+modelos.abertura = function (parametros) {
+  const duracao = parametros.duracao;
+  const cartao = posicionar(criarElemento("div", "cartao"), { left: parametros.x + "px", top: parametros.y + "px", width: parametros.largura + "px", padding: "40px 52px 44px" });
+  cartao.appendChild(criarElemento("div", "cartao-grade"));
+  const conteudo = posicionar(criarElemento("div"), { position: "relative" });
+  const rotulo = criarElemento("div", "rotulo-mono rotulo-verde", parametros.rotulo);
+  posicionar(rotulo, { marginBottom: "18px" });
+  conteudo.appendChild(rotulo);
+  const linhasTitulo = parametros.linhas.map(function (texto) {
+    const linhaMascarada = criarLinhaMascarada(texto, "titulo-grande");
+    posicionar(linhaMascarada.linha, { fontSize: parametros.tamanhoTitulo + "px" });
+    conteudo.appendChild(linhaMascarada.linha);
+    return linhaMascarada;
+  });
+  const linhaPilulas = posicionar(criarElemento("div"), { display: "flex", gap: "16px", marginTop: "26px" });
+  const pilulas = parametros.pilulas.map(function (texto) {
+    const pilula = posicionar(criarElemento("div", "pilula", '<span class="ponto"></span>' + texto), { position: "relative", fontSize: "24px", padding: "10px 22px" });
+    linhaPilulas.appendChild(pilula);
+    return pilula;
+  });
+  conteudo.appendChild(linhaPilulas);
+  const marca = criarElemento("div", "rotulo-mono", MARCA_DAGUA);
+  posicionar(marca, { position: "absolute", right: "0px", top: "2px", fontSize: "16px" });
+  conteudo.appendChild(marca);
+  cartao.appendChild(conteudo);
+  palco.appendChild(cartao);
+
+  return function desenhar(tempo) {
+    const saidaInicio = duracao - 0.55;
+    const entradaCartao = suavizarSaida(progresso(tempo, 0, 0.45));
+    const saidaCartao = suavizarEntradaSaida(progresso(tempo, saidaInicio + 0.2, 0.35));
+    cartao.style.opacity = Math.min(entradaCartao, 1 - saidaCartao);
+    cartao.style.transform = "translateY(" + ((1 - entradaCartao) * 24 + saidaCartao * 16) + "px) scale(" + interpolar(0.97, 1, entradaCartao) + ")";
+    rotulo.style.opacity = progresso(tempo, 0.2, 0.25);
+    marca.style.opacity = progresso(tempo, 0.3, 0.25);
+    let atraso = 0.25;
+    linhasTitulo.forEach(function (linhaMascarada) {
+      animarPalavrasMascaradas(linhaMascarada.palavras, tempo, atraso, 0.07, 0.42, saidaInicio, 0.3);
+      atraso += linhaMascarada.palavras.length * 0.07 + 0.08;
+    });
+    pilulas.forEach(function (pilula, indice) {
+      const entrada = suavizarMola(progresso(tempo, atraso + 0.1 + indice * 0.12, 0.5));
+      const saida = progresso(tempo, saidaInicio, 0.25);
+      pilula.style.opacity = Math.min(limitar(entrada * 1.4, 0, 1), 1 - saida);
+      pilula.style.transform = "scale(" + interpolar(0.8, 1, entrada) + ")";
+    });
+  };
+};
+
+/* Título de capítulo discreto no canto. */
+modelos.capitulo = function (parametros) {
+  const duracao = parametros.duracao;
+  const grupo = posicionar(criarElemento("div"), { position: "absolute", left: parametros.x + "px", top: parametros.y + "px" });
+  const fundo = posicionar(criarElemento("div", "cartao"), { left: "0px", top: "0px", height: "96px", borderRadius: "14px" });
+  grupo.appendChild(fundo);
+  const numero = posicionar(criarElemento("div", "rotulo-mono rotulo-verde", parametros.numero), { position: "absolute", left: "26px", top: "16px", fontSize: "17px", whiteSpace: "nowrap" });
+  const tituloMascarado = criarLinhaMascarada(parametros.titulo, "titulo-grande");
+  posicionar(tituloMascarado.linha, { position: "absolute", left: "26px", top: "40px", fontSize: "36px", whiteSpace: "nowrap" });
+  grupo.appendChild(numero);
+  grupo.appendChild(tituloMascarado.linha);
+  const linha = posicionar(criarElemento("div", "linha-capitulo"), { left: "26px", top: "88px" });
+  grupo.appendChild(linha);
+  palco.appendChild(grupo);
+  let larguraConteudo = 0;
+
+  return function desenhar(tempo) {
+    if (!larguraConteudo) larguraConteudo = Math.max(tituloMascarado.linha.scrollWidth, numero.scrollWidth) + 52;
+    const abertura = suavizarSaida(progresso(tempo, 0, 0.4));
+    const fechamento = suavizarEntradaSaida(progresso(tempo, duracao - 0.45, 0.4));
+    fundo.style.width = (larguraConteudo * abertura * (1 - fechamento) + 4) + "px";
+    fundo.style.opacity = Math.min(abertura, 1 - fechamento);
+    numero.style.opacity = Math.min(progresso(tempo, 0.18, 0.2), 1 - progresso(tempo, duracao - 0.5, 0.2));
+    animarPalavrasMascaradas(tituloMascarado.palavras, tempo, 0.2, 0.06, 0.4, duracao - 0.55, 0.3);
+    const crescimentoLinha = suavizarEntradaSaida(progresso(tempo, 0.35, 0.6));
+    const sumicoLinha = progresso(tempo, duracao - 0.6, 0.3);
+    linha.style.width = ((larguraConteudo - 52) * crescimentoLinha) + "px";
+    linha.style.opacity = 0.9 * (1 - sumicoLinha);
+  };
+};
+
+/* Pílula de palavra-chave, número ou nome de ferramenta (com rótulo opcional acima). */
+modelos.pilula = function (parametros) {
+  const duracao = parametros.duracao;
+  const grupo = posicionar(criarElemento("div"), { position: "absolute", left: parametros.x + "px", top: parametros.y + "px" });
+  let rotulo = null;
+  if (parametros.rotulo) {
+    rotulo = posicionar(criarElemento("div", "pilula-rotulo", parametros.rotulo), { left: "6px", top: "-30px" });
+    grupo.appendChild(rotulo);
+  }
+  const pilula = posicionar(criarElemento("div", "pilula", '<span class="ponto"></span><span>' + parametros.texto + "</span>"), { position: "relative", transformOrigin: "left center" });
+  grupo.appendChild(pilula);
+  palco.appendChild(grupo);
+  if (parametros.alinhamento === "direita") {
+    grupo.style.left = "auto";
+    grupo.style.right = (1920 - parametros.x) + "px";
+    pilula.style.transformOrigin = "right center";
+    if (rotulo) { rotulo.style.left = "auto"; rotulo.style.right = "6px"; }
+  }
+  return function desenhar(tempo) {
+    const entrada = suavizarMola(progresso(tempo, 0, 0.5));
+    const saida = suavizarEntradaSaida(progresso(tempo, duracao - 0.3, 0.3));
+    pilula.style.opacity = Math.min(limitar(entrada * 1.6, 0, 1), 1 - saida);
+    pilula.style.transform = "scale(" + (interpolar(0.82, 1, entrada) - saida * 0.08) + ")";
+    if (rotulo) rotulo.style.opacity = Math.min(progresso(tempo, 0.15, 0.25), 1 - saida);
+  };
+};
+
+/* Terminal com comando sendo digitado e aviso opcional. */
+modelos.comando = function (parametros) {
+  const duracao = parametros.duracao;
+  const cartao = posicionar(criarElemento("div", "cartao"), { left: parametros.x + "px", top: parametros.y + "px", minWidth: parametros.largura + "px" });
+  const barra = criarElemento("div", "terminal-barra", '<span class="terminal-bolinha verde"></span><span class="terminal-bolinha"></span><span class="terminal-bolinha"></span><span class="terminal-titulo">' + (parametros.tituloJanela || "terminal") + "</span>");
+  cartao.appendChild(barra);
+  const corpo = criarElemento("div", "terminal-corpo");
+  if (parametros.tamanhoFonte) corpo.style.fontSize = parametros.tamanhoFonte + "px";
+  const prompt = criarElemento("span", "terminal-prompt", parametros.prompt === undefined ? "$ " : parametros.prompt);
+  const textoDigitado = criarElemento("span");
+  const cursor = criarElemento("span", "cursor");
+  corpo.appendChild(prompt); corpo.appendChild(textoDigitado); corpo.appendChild(cursor);
+  cartao.appendChild(corpo);
+  palco.appendChild(cartao);
+  let aviso = null;
+  if (parametros.aviso) {
+    const deslocamentoAviso = parametros.avisoAcima ? -70 : (parametros.tamanhoFonte ? parametros.tamanhoFonte * 1.3 + 46 + 56 + 24 : 170);
+    aviso = posicionar(criarElemento("div", "pilula", '<span class="ponto"></span><span>' + parametros.aviso + "</span>"), { left: (parametros.x + 24) + "px", top: (parametros.y + deslocamentoAviso) + "px", fontSize: "24px", padding: "10px 22px" });
+    palco.appendChild(aviso);
+  }
+  const comandoCompleto = parametros.comando;
+  const destaqueFinal = parametros.destaqueFinal || "";
+  const duracaoDigitacao = parametros.duracaoDigitacao || Math.min(1.4, comandoCompleto.length * 0.045);
+
+  return function desenhar(tempo) {
+    const entrada = suavizarSaida(progresso(tempo, 0, 0.35));
+    const saida = suavizarEntradaSaida(progresso(tempo, duracao - 0.35, 0.35));
+    cartao.style.opacity = Math.min(entrada, 1 - saida);
+    cartao.style.transform = "translateY(" + ((1 - entrada) * 18 + saida * 10) + "px)";
+    const caracteresVisiveis = Math.floor(comandoCompleto.length * progresso(tempo, 0.3, duracaoDigitacao));
+    const textoAtual = comandoCompleto.slice(0, caracteresVisiveis);
+    if (destaqueFinal && textoAtual.endsWith(destaqueFinal) && caracteresVisiveis === comandoCompleto.length) {
+      textoDigitado.innerHTML = textoAtual.slice(0, -destaqueFinal.length) + '<span class="destaque" style="text-decoration: underline; text-underline-offset: 8px; text-decoration-thickness: 3px;">' + destaqueFinal + "</span>";
+    } else {
+      textoDigitado.textContent = textoAtual;
+    }
+    const digitando = tempo > 0.3 && tempo < 0.3 + duracaoDigitacao;
+    cursor.style.opacity = digitando ? 1 : (Math.floor(tempo * 2.2) % 2 === 0 ? 1 : 0);
+    if (aviso) {
+      const entradaAviso = suavizarMola(progresso(tempo, 0.45 + duracaoDigitacao, 0.5));
+      aviso.style.opacity = Math.min(limitar(entradaAviso * 1.6, 0, 1), 1 - saida);
+      aviso.style.transform = "scale(" + interpolar(0.82, 1, entradaAviso) + ")";
+    }
+  };
+};
+
+/* Comparação de dois números lado a lado (clímax do teste de tokens). */
+modelos.comparacao = function (parametros) {
+  const duracao = parametros.duracao;
+  const fundo = criarElemento("div", "fundo-cheio");
+  palco.appendChild(fundo);
+  const titulo = criarLinhaMascarada(parametros.titulo, "titulo-grande");
+  posicionar(titulo.linha, { position: "absolute", left: "0", right: "0", top: "150px", textAlign: "center", fontSize: "78px" });
+  palco.appendChild(titulo.linha);
+  const subtitulo = posicionar(criarElemento("div", "rotulo-mono", parametros.subtitulo), { position: "absolute", left: "0", right: "0", top: "260px", textAlign: "center" });
+  palco.appendChild(subtitulo);
+
+  const larguraCartao = 640, alturaCartao = 360, espaco = 64;
+  const esquerdaInicial = (1920 - (larguraCartao * 2 + espaco)) / 2;
+  const valorMaximo = Math.max(parametros.lados[0].valor, parametros.lados[1].valor);
+  const cartoes = parametros.lados.map(function (lado, indice) {
+    const ehVencedor = lado.vencedor === true;
+    const cartao = posicionar(criarElemento("div", "cartao"), {
+      left: (esquerdaInicial + indice * (larguraCartao + espaco)) + "px", top: "340px", width: larguraCartao + "px", height: alturaCartao + "px",
+      borderColor: ehVencedor ? "var(--cor-verde-borda)" : "rgba(255,255,255,0.14)",
+      boxShadow: ehVencedor ? "0 0 60px rgba(28,252,119,0.18), 0 24px 60px rgba(0,0,0,0.55)" : "0 24px 60px rgba(0,0,0,0.55)"
+    });
+    cartao.appendChild(criarElemento("div", "cartao-grade"));
+    const rotulo = posicionar(criarElemento("div", "rotulo-mono" + (ehVencedor ? " rotulo-verde" : ""), lado.rotulo), { position: "absolute", left: "44px", top: "40px", fontSize: "22px" });
+    const numero = posicionar(criarElemento("div", "numero-grande"), { position: "absolute", left: "40px", top: "92px", fontSize: "112px", whiteSpace: "nowrap", color: ehVencedor ? "var(--cor-verde)" : "var(--cor-texto)" });
+    const unidade = posicionar(criarElemento("div", "rotulo-mono", lado.unidade), { position: "absolute", left: "44px", top: "236px", fontSize: "18px", textTransform: "none", letterSpacing: "0.06em" });
+    const trilho = posicionar(criarElemento("div", "barra-trilho"), { position: "absolute", left: "44px", right: "44px", top: "292px" });
+    const preenchimento = posicionar(criarElemento("div", "barra-preenchimento"), { background: ehVencedor ? "var(--cor-verde)" : "#6B706D", boxShadow: ehVencedor ? "0 0 18px rgba(28,252,119,0.6)" : "none" });
+    trilho.appendChild(preenchimento);
+    [rotulo, numero, unidade, trilho].forEach(function (filho) { cartao.appendChild(filho); });
+    palco.appendChild(cartao);
+    return { cartao: cartao, numero: numero, preenchimento: preenchimento, lado: lado, proporcao: lado.valor / valorMaximo };
+  });
+
+  const delta = posicionar(criarElemento("div", "pilula", '<span class="ponto"></span><span>' + parametros.delta + "</span>"), { left: "50%", top: "760px", fontSize: "40px", padding: "16px 34px", transformOrigin: "center center" });
+  if (parametros.deltaNegativo) { delta.style.borderColor = "rgba(255,90,95,0.7)"; delta.style.color = "var(--cor-vermelho)"; delta.style.boxShadow = "inset 0 0 0 999px rgba(255,90,95,0.1), 0 0 28px rgba(255,90,95,0.2)"; delta.querySelector(".ponto").style.background = "var(--cor-vermelho)"; delta.querySelector(".ponto").style.boxShadow = "0 0 10px var(--cor-vermelho)"; }
+  palco.appendChild(delta);
+  const fonte = posicionar(criarElemento("div", "rotulo-mono", parametros.fonte || ""), { position: "absolute", left: "0", right: "0", top: "870px", textAlign: "center", fontSize: "16px", textTransform: "none", letterSpacing: "0.06em" });
+  palco.appendChild(fonte);
+  const marca = posicionar(criarElemento("div", "marca-dagua", MARCA_DAGUA), { right: "60px", bottom: "48px" });
+  palco.appendChild(marca);
+
+  return function desenhar(tempo) {
+    const visibilidadeGeral = opacidadeEntradaSaida(tempo, duracao, 0.3, 0.4);
+    fundo.style.opacity = visibilidadeGeral;
+    animarPalavrasMascaradas(titulo.palavras, tempo, 0.2, 0.08, 0.45, duracao - 0.6, 0.3);
+    subtitulo.style.opacity = Math.min(progresso(tempo, 0.55, 0.3), 1 - progresso(tempo, duracao - 0.5, 0.3));
+    cartoes.forEach(function (item, indice) {
+      const inicioCartao = 0.7 + indice * 0.9;
+      const entrada = suavizarSaida(progresso(tempo, inicioCartao, 0.45));
+      item.cartao.style.opacity = Math.min(entrada, visibilidadeGeral);
+      item.cartao.style.transform = "translateY(" + ((1 - entrada) * 30) + "px)";
+      const contagem = suavizarSaida(progresso(tempo, inicioCartao + 0.2, 1.3));
+      const prefixoMenor = item.lado.prefixo ? '<span style="font-size:0.4em;letter-spacing:0.02em;margin-right:0.18em;vertical-align:0.9em;">' + item.lado.prefixo.trim() + "</span>" : "";
+      item.numero.innerHTML = prefixoMenor + formatarNumeroBrasileiro(item.lado.valor * contagem, item.lado.casasDecimais || 0) + (item.lado.sufixo || "");
+      item.preenchimento.style.width = (item.proporcao * contagem * 100) + "%";
+    });
+    const entradaDelta = suavizarMola(progresso(tempo, 3.2, 0.6));
+    delta.style.opacity = Math.min(limitar(entradaDelta * 1.6, 0, 1), visibilidadeGeral);
+    delta.style.transform = "translateX(-50%) scale(" + interpolar(0.7, 1, entradaDelta) + ")";
+    fonte.style.opacity = Math.min(progresso(tempo, 3.6, 0.4), visibilidadeGeral) * 0.9;
+    marca.style.opacity = visibilidadeGeral;
+  };
+};
+
+/* Painel de tela cheia ou painel esquerdo do layout dividido: título + itens que entram um a um. */
+modelos.painel = function (parametros) {
+  const duracao = parametros.duracao;
+  const layoutDividido = parametros.layout === "dividido";
+  const fundo = criarElemento("div", "fundo-cheio");
+  palco.appendChild(fundo);
+  const areaEsquerda = layoutDividido ? 64 : 0;
+  const larguraArea = layoutDividido ? 480 : 1920;
+  let molduraTela = null;
+  if (layoutDividido) {
+    molduraTela = posicionar(criarElemento("div"), { position: "absolute", left: "590px", top: "178px", width: "1284px", height: "724px", borderRadius: "6px", border: "2px solid rgba(28,252,119,0.45)", boxShadow: "0 0 60px rgba(28,252,119,0.16), 0 30px 80px rgba(0,0,0,0.6)", background: "#000" });
+    palco.appendChild(molduraTela);
+  }
+  const blocoTexto = posicionar(criarElemento("div"), { position: "absolute", left: areaEsquerda + "px", width: larguraArea + "px", top: (layoutDividido ? 200 : (parametros.topo || 230)) + "px", textAlign: layoutDividido ? "left" : "center" });
+  palco.appendChild(blocoTexto);
+  const rotulo = posicionar(criarElemento("div", "rotulo-mono rotulo-verde", parametros.rotulo || ""), { marginBottom: "20px" });
+  blocoTexto.appendChild(rotulo);
+  const linhasTitulo = (parametros.linhas || []).map(function (texto) {
+    const linhaMascarada = criarLinhaMascarada(texto, "titulo-grande");
+    posicionar(linhaMascarada.linha, { fontSize: (parametros.tamanhoTitulo || (layoutDividido ? 52 : 84)) + "px" });
+    blocoTexto.appendChild(linhaMascarada.linha);
+    return linhaMascarada;
+  });
+  const listaItens = posicionar(criarElemento("div"), { display: "flex", flexDirection: layoutDividido || parametros.itensEmColuna ? "column" : "row", gap: layoutDividido ? "18px" : "26px", marginTop: layoutDividido ? "40px" : "60px", justifyContent: "center", alignItems: layoutDividido ? "flex-start" : "stretch", flexWrap: "wrap" });
+  blocoTexto.appendChild(listaItens);
+  const itens = (parametros.itens || []).map(function (item) {
+    let elemento;
+    if (item.tipo === "cartao") {
+      elemento = posicionar(criarElemento("div", "cartao"), { position: "relative", width: (item.largura || 400) + "px", padding: "30px 34px", textAlign: "left", borderColor: item.apagado ? "rgba(255,255,255,0.14)" : "var(--cor-verde-borda)" });
+      elemento.appendChild(criarElemento("div", "cartao-grade"));
+      const rotuloItem = posicionar(criarElemento("div", "rotulo-mono" + (item.apagado ? "" : " rotulo-verde"), item.rotulo || ""), { position: "relative", fontSize: "16px", marginBottom: "14px" });
+      const valorItem = posicionar(criarElemento("div", item.mono ? "" : "numero-grande", item.valor), { position: "relative", fontSize: (item.tamanho || 54) + "px", fontFamily: item.mono ? "'JetBrains Mono', monospace" : "", color: item.cor || "var(--cor-texto)", whiteSpace: "nowrap" });
+      elemento.appendChild(rotuloItem); elemento.appendChild(valorItem);
+      if (item.detalhe) {
+        elemento.appendChild(posicionar(criarElemento("div", "rotulo-mono", item.detalhe), { position: "relative", fontSize: "15px", textTransform: "none", letterSpacing: "0.04em", marginTop: "12px", whiteSpace: "normal" }));
+      }
+    } else {
+      elemento = posicionar(criarElemento("div", "pilula", '<span class="ponto"></span><span>' + item.texto + "</span>"), { position: "relative", fontSize: (item.tamanho || 28) + "px", alignSelf: layoutDividido ? "flex-start" : "center" });
+      if (item.cor === "amarelo") { elemento.style.color = "var(--cor-amarelo)"; elemento.style.borderColor = "rgba(255,197,61,0.7)"; elemento.style.boxShadow = "inset 0 0 0 999px rgba(255,197,61,0.1), 0 0 24px rgba(255,197,61,0.15)"; elemento.querySelector(".ponto").style.background = "var(--cor-amarelo)"; elemento.querySelector(".ponto").style.boxShadow = "0 0 10px var(--cor-amarelo)"; }
+      if (item.cor === "vermelho") { elemento.style.color = "var(--cor-vermelho)"; elemento.style.borderColor = "rgba(255,90,95,0.7)"; elemento.style.boxShadow = "inset 0 0 0 999px rgba(255,90,95,0.1), 0 0 24px rgba(255,90,95,0.15)"; elemento.querySelector(".ponto").style.background = "var(--cor-vermelho)"; elemento.querySelector(".ponto").style.boxShadow = "0 0 10px var(--cor-vermelho)"; }
+    }
+    listaItens.appendChild(elemento);
+    return { elemento: elemento, inicio: item.inicio };
+  });
+  const marca = posicionar(criarElemento("div", "marca-dagua", MARCA_DAGUA), { left: layoutDividido ? "64px" : "auto", right: layoutDividido ? "auto" : "60px", bottom: "48px" });
+  palco.appendChild(marca);
+
+  return function desenhar(tempo) {
+    const visibilidadeGeral = parametros.semFundoAnimado ? 1 : opacidadeEntradaSaida(tempo, duracao, 0.3, 0.35);
+    fundo.style.opacity = visibilidadeGeral;
+    if (molduraTela) molduraTela.style.opacity = visibilidadeGeral;
+    rotulo.style.opacity = Math.min(progresso(tempo, 0.2, 0.3), visibilidadeGeral);
+    let atraso = 0.3;
+    linhasTitulo.forEach(function (linhaMascarada) {
+      animarPalavrasMascaradas(linhaMascarada.palavras, tempo, atraso, 0.07, 0.42, duracao - 0.55, 0.3);
+      atraso += linhaMascarada.palavras.length * 0.07 + 0.06;
+    });
+    itens.forEach(function (item, indice) {
+      const inicioItem = item.inicio !== undefined ? item.inicio : atraso + 0.25 + indice * 0.35;
+      const entrada = suavizarMola(progresso(tempo, inicioItem, 0.55));
+      item.elemento.style.opacity = Math.min(limitar(entrada * 1.6, 0, 1), visibilidadeGeral);
+      item.elemento.style.transform = "translateY(" + ((1 - entrada) * 26) + "px) scale(" + interpolar(0.9, 1, entrada) + ")";
+    });
+    marca.style.opacity = visibilidadeGeral * 0.9;
+  };
+};
+
+/* Grafo animado: nós aparecem e se conectam (ilustra o "mapa do projeto"). */
+modelos.grafo = function (parametros) {
+  const duracao = parametros.duracao;
+  const layoutDividido = parametros.layout === "dividido";
+  const fundo = criarElemento("div", "fundo-cheio");
+  palco.appendChild(fundo);
+  const centroX = layoutDividido ? 300 : 960, centroY = layoutDividido ? 640 : 600, raio = layoutDividido ? 200 : 300;
+  let semente = 7;
+  function aleatorioComSemente() { semente = (semente * 16807) % 2147483647; return (semente - 1) / 2147483646; }
+  const grupos = [
+    { cor: "#1CFC77", nome: "código", anguloBase: -2.3 },
+    { cor: "#7FB8FF", nome: "docs", anguloBase: -0.6 },
+    { cor: "#FFB86B", nome: "config", anguloBase: 1.0 },
+    { cor: "#F28DD6", nome: "PDFs", anguloBase: 2.5 }
+  ];
+  const nos = [];
+  grupos.forEach(function (grupo, indiceGrupo) {
+    const centroGrupoX = centroX + Math.cos(grupo.anguloBase) * raio * 0.62;
+    const centroGrupoY = centroY + Math.sin(grupo.anguloBase) * raio * 0.62;
+    for (let indiceNo = 0; indiceNo < 7; indiceNo++) {
+      const angulo = aleatorioComSemente() * Math.PI * 2;
+      const distancia = (indiceNo === 0 ? 0 : 0.18 + aleatorioComSemente() * 0.24) * raio;
+      nos.push({ x: centroGrupoX + Math.cos(angulo) * distancia, y: centroGrupoY + Math.sin(angulo) * distancia, cor: grupo.cor, grupo: indiceGrupo, principal: indiceNo === 0, atraso: 0.4 + indiceGrupo * 0.25 + indiceNo * 0.06 });
+    }
+  });
+  const arestas = [];
+  nos.forEach(function (no, indice) {
+    if (no.principal) return;
+    const principalDoGrupo = nos.find(function (outro) { return outro.grupo === no.grupo && outro.principal; });
+    arestas.push({ de: principalDoGrupo, para: no, atraso: no.atraso + 0.1 });
+  });
+  const principais = nos.filter(function (no) { return no.principal; });
+  for (let indice = 0; indice < principais.length; indice++) {
+    arestas.push({ de: principais[indice], para: principais[(indice + 1) % principais.length], atraso: 1.6 + indice * 0.12 });
+  }
+  const svgNamespace = "http://www.w3.org/2000/svg";
+  const desenho = document.createElementNS(svgNamespace, "svg");
+  desenho.setAttribute("width", "1920"); desenho.setAttribute("height", "1080");
+  posicionar(desenho, { left: "0px", top: "0px" });
+  palco.appendChild(desenho);
+  const linhasSvg = arestas.map(function (aresta) {
+    const linha = document.createElementNS(svgNamespace, "line");
+    linha.setAttribute("x1", aresta.de.x); linha.setAttribute("y1", aresta.de.y);
+    linha.setAttribute("stroke", aresta.para.principal ? "rgba(255,255,255,0.35)" : aresta.para.cor);
+    linha.setAttribute("stroke-opacity", "0.55"); linha.setAttribute("stroke-width", "1.6");
+    desenho.appendChild(linha);
+    return { linha: linha, aresta: aresta };
+  });
+  const circulosSvg = nos.map(function (no) {
+    const circulo = document.createElementNS(svgNamespace, "circle");
+    circulo.setAttribute("cx", no.x); circulo.setAttribute("cy", no.y); circulo.setAttribute("fill", no.cor);
+    circulo.setAttribute("style", "filter: drop-shadow(0 0 8px " + no.cor + ")");
+    desenho.appendChild(circulo);
+    return { circulo: circulo, no: no };
+  });
+  const legenda = posicionar(criarElemento("div"), { position: "absolute", left: layoutDividido ? "64px" : "0", right: layoutDividido ? "auto" : "0", top: (centroY + raio + 40) + "px", display: "flex", gap: "28px", justifyContent: "center" });
+  grupos.forEach(function (grupo) {
+    legenda.appendChild(criarElemento("div", "rotulo-mono", '<span style="color:' + grupo.cor + '">●</span> ' + grupo.nome));
+  });
+  palco.appendChild(legenda);
+  const blocoTitulo = posicionar(criarElemento("div"), { position: "absolute", left: layoutDividido ? "64px" : "0", right: layoutDividido ? "auto" : "0", top: layoutDividido ? "190px" : "120px", textAlign: layoutDividido ? "left" : "center", width: layoutDividido ? "480px" : "auto" });
+  const rotulo = posicionar(criarElemento("div", "rotulo-mono rotulo-verde", parametros.rotulo || ""), { marginBottom: "16px" });
+  blocoTitulo.appendChild(rotulo);
+  const titulo = criarLinhaMascarada(parametros.titulo, "titulo-grande");
+  posicionar(titulo.linha, { fontSize: (layoutDividido ? 52 : 76) + "px" });
+  blocoTitulo.appendChild(titulo.linha);
+  palco.appendChild(blocoTitulo);
+  let molduraTela = null;
+  if (layoutDividido) {
+    molduraTela = posicionar(criarElemento("div"), { position: "absolute", left: "590px", top: "178px", width: "1284px", height: "724px", borderRadius: "6px", border: "2px solid rgba(28,252,119,0.45)", boxShadow: "0 0 60px rgba(28,252,119,0.16), 0 30px 80px rgba(0,0,0,0.6)", background: "#000" });
+    palco.appendChild(molduraTela);
+  }
+  const marca = posicionar(criarElemento("div", "marca-dagua", MARCA_DAGUA), { left: layoutDividido ? "64px" : "auto", right: layoutDividido ? "auto" : "60px", bottom: "48px" });
+  palco.appendChild(marca);
+
+  return function desenhar(tempo) {
+    const visibilidadeGeral = opacidadeEntradaSaida(tempo, duracao, 0.3, 0.35);
+    fundo.style.opacity = visibilidadeGeral;
+    desenho.style.opacity = visibilidadeGeral;
+    if (molduraTela) molduraTela.style.opacity = visibilidadeGeral;
+    const rotacaoLenta = tempo * 0.04;
+    function posicaoGirada(no) {
+      const deslocX = no.x - centroX, deslocY = no.y - centroY;
+      return { x: centroX + deslocX * Math.cos(rotacaoLenta) - deslocY * Math.sin(rotacaoLenta), y: centroY + deslocX * Math.sin(rotacaoLenta) + deslocY * Math.cos(rotacaoLenta) };
+    }
+    circulosSvg.forEach(function (item) {
+      const entrada = suavizarMola(progresso(tempo, item.no.atraso, 0.5));
+      const posicao = posicaoGirada(item.no);
+      item.circulo.setAttribute("cx", posicao.x); item.circulo.setAttribute("cy", posicao.y);
+      item.circulo.setAttribute("r", Math.max(0, (item.no.principal ? 13 : 7) * entrada));
+    });
+    linhasSvg.forEach(function (item) {
+      const crescimento = suavizarEntradaSaida(progresso(tempo, item.aresta.atraso, 0.45));
+      const origem = posicaoGirada(item.aresta.de), destino = posicaoGirada(item.aresta.para);
+      item.linha.setAttribute("x1", origem.x); item.linha.setAttribute("y1", origem.y);
+      item.linha.setAttribute("x2", interpolar(origem.x, destino.x, crescimento));
+      item.linha.setAttribute("y2", interpolar(origem.y, destino.y, crescimento));
+    });
+    legenda.style.opacity = Math.min(progresso(tempo, 2.0, 0.4), visibilidadeGeral);
+    rotulo.style.opacity = Math.min(progresso(tempo, 0.2, 0.3), visibilidadeGeral);
+    animarPalavrasMascaradas(titulo.palavras, tempo, 0.3, 0.07, 0.42, duracao - 0.55, 0.3);
+    marca.style.opacity = visibilidadeGeral * 0.9;
+  };
+};
+
+/* Agente relendo arquivos: árvore de arquivos rolando dentro de um terminal + contador de tokens subindo. */
+modelos.leitura = function (parametros) {
+  const duracao = parametros.duracao;
+  const fundo = criarElemento("div", "fundo-cheio");
+  palco.appendChild(fundo);
+  const titulo = criarLinhaMascarada(parametros.titulo, "titulo-grande");
+  posicionar(titulo.linha, { position: "absolute", left: "0", right: "0", top: "110px", textAlign: "center", fontSize: "76px" });
+  palco.appendChild(titulo.linha);
+  const cartao = posicionar(criarElemento("div", "cartao"), { left: "460px", top: "250px", width: "1000px", height: "430px" });
+  cartao.appendChild(criarElemento("div", "terminal-barra", '<span class="terminal-bolinha verde"></span><span class="terminal-bolinha"></span><span class="terminal-bolinha"></span><span class="terminal-titulo">' + (parametros.tituloJanela || "projeto · arquivos") + "</span>"));
+  const janelaRolagem = posicionar(criarElemento("div"), { position: "absolute", left: "0", right: "0", top: "47px", bottom: "0", overflow: "hidden" });
+  const listaArquivos = posicionar(criarElemento("div"), { position: "absolute", left: "40px", top: "20px", fontFamily: "'JetBrains Mono', monospace", fontSize: "26px", lineHeight: "40px", color: "var(--cor-texto)", whiteSpace: "pre" });
+  const linhasArquivos = parametros.arquivos.map(function (textoLinha) {
+    const ehPasta = textoLinha.trim().endsWith("/");
+    const linha = criarElemento("div", "", textoLinha);
+    if (ehPasta) linha.style.color = "var(--cor-verde)";
+    listaArquivos.appendChild(linha);
+    return linha;
+  });
+  janelaRolagem.appendChild(listaArquivos);
+  cartao.appendChild(janelaRolagem);
+  palco.appendChild(cartao);
+  const rotuloContador = posicionar(criarElemento("div", "rotulo-mono", parametros.rotuloContador || "tokens gastos"), { position: "absolute", left: "0", right: "0", top: "712px", textAlign: "center" });
+  const numeroContador = posicionar(criarElemento("div", "numero-grande"), { position: "absolute", left: "0", right: "0", top: "744px", textAlign: "center", fontSize: "124px" });
+  palco.appendChild(rotuloContador);
+  palco.appendChild(numeroContador);
+  const marca = posicionar(criarElemento("div", "marca-dagua", MARCA_DAGUA), { right: "60px", bottom: "48px" });
+  palco.appendChild(marca);
+
+  return function desenhar(tempo) {
+    const visibilidadeGeral = opacidadeEntradaSaida(tempo, duracao, 0.3, 0.35);
+    fundo.style.opacity = visibilidadeGeral;
+    animarPalavrasMascaradas(titulo.palavras, tempo, 0.2, 0.08, 0.45, duracao - 0.55, 0.3);
+    const entradaCartao = suavizarSaida(progresso(tempo, 0.4, 0.45));
+    cartao.style.opacity = Math.min(entradaCartao, visibilidadeGeral);
+    cartao.style.transform = "translateY(" + ((1 - entradaCartao) * 26) + "px)";
+    const avancoLeitura = progresso(tempo, 0.7, duracao - 1.4);
+    const linhasVisiveis = Math.floor(avancoLeitura * linhasArquivos.length * 1.0) + 1;
+    linhasArquivos.forEach(function (linha, indice) { linha.style.opacity = indice < linhasVisiveis ? 1 : 0; });
+    const deslocamento = Math.max(0, (linhasVisiveis - 9) * 40);
+    listaArquivos.style.transform = "translateY(" + (-deslocamento) + "px)";
+    const valorAtual = parametros.valorInicial + (parametros.valorFinal - parametros.valorInicial) * Math.pow(avancoLeitura, 1.6);
+    numeroContador.textContent = formatarNumeroBrasileiro(Math.round(valorAtual / 1000) * 1000, 0);
+    const emAlerta = avancoLeitura > 0.8;
+    numeroContador.style.color = emAlerta ? "var(--cor-vermelho)" : "var(--cor-texto)";
+    rotuloContador.style.opacity = Math.min(progresso(tempo, 0.6, 0.3), visibilidadeGeral);
+    numeroContador.style.opacity = Math.min(progresso(tempo, 0.6, 0.3), visibilidadeGeral);
+    marca.style.opacity = visibilidadeGeral * 0.9;
+  };
+};
+
+/* Número ou palavra gigante centralizada com legenda mono (ex.: "-80%?", "★ 136 mil"). */
+modelos.numero = function (parametros) {
+  const duracao = parametros.duracao;
+  const fundo = criarElemento("div", "fundo-cheio");
+  palco.appendChild(fundo);
+  const bloco = posicionar(criarElemento("div"), { position: "absolute", left: "0", right: "0", top: (parametros.topo || 330) + "px", textAlign: "center" });
+  const numero = posicionar(criarElemento("div", "numero-grande", parametros.texto), { fontSize: (parametros.tamanho || 220) + "px", lineHeight: "1", display: "inline-block", color: parametros.cor || "var(--cor-texto)" });
+  const legenda = posicionar(criarElemento("div", "rotulo-mono", parametros.legenda || ""), { marginTop: "26px", fontSize: "24px" });
+  bloco.appendChild(numero);
+  bloco.appendChild(legenda);
+  palco.appendChild(bloco);
+  let pilulas = [];
+  if (parametros.pilulas) {
+    const linhaPilulas = posicionar(criarElemento("div"), { position: "absolute", left: "0", right: "0", top: ((parametros.topo || 330) + (parametros.tamanho || 220) + 120) + "px", display: "flex", gap: "20px", justifyContent: "center" });
+    pilulas = parametros.pilulas.map(function (texto) {
+      const pilula = posicionar(criarElemento("div", "pilula", '<span class="ponto"></span><span>' + texto + "</span>"), { position: "relative", fontSize: "26px" });
+      linhaPilulas.appendChild(pilula);
+      return pilula;
+    });
+    palco.appendChild(linhaPilulas);
+  }
+  const marca = posicionar(criarElemento("div", "marca-dagua", MARCA_DAGUA), { right: "60px", bottom: "48px" });
+  palco.appendChild(marca);
+
+  return function desenhar(tempo) {
+    const visibilidadeGeral = opacidadeEntradaSaida(tempo, duracao, 0.3, 0.35);
+    fundo.style.opacity = visibilidadeGeral;
+    const entrada = suavizarMola(progresso(tempo, 0.25, 0.6));
+    numero.style.opacity = Math.min(limitar(entrada * 1.5, 0, 1), visibilidadeGeral);
+    numero.style.transform = "scale(" + interpolar(0.75, 1, entrada) + ")";
+    legenda.style.opacity = Math.min(progresso(tempo, 0.6, 0.35), visibilidadeGeral);
+    pilulas.forEach(function (pilula, indice) {
+      const entradaPilula = suavizarMola(progresso(tempo, 0.9 + indice * 0.3, 0.5));
+      pilula.style.opacity = Math.min(limitar(entradaPilula * 1.6, 0, 1), visibilidadeGeral);
+      pilula.style.transform = "scale(" + interpolar(0.82, 1, entradaPilula) + ")";
+    });
+    marca.style.opacity = visibilidadeGeral * 0.9;
+  };
+};
+
+/* Print real (ex.: banner do repositório) num cartão, com rótulo e pílulas opcionais. */
+modelos.imagem = function (parametros) {
+  const duracao = parametros.duracao;
+  let fundo = null;
+  if (parametros.fundoCheio) { fundo = criarElemento("div", "fundo-cheio"); palco.appendChild(fundo); }
+  const cartao = posicionar(criarElemento("div", "cartao"), { left: parametros.x + "px", top: parametros.y + "px", width: parametros.largura + "px", padding: "0" });
+  const imagem = posicionar(criarElemento("img"), { display: "block", width: "100%" });
+  imagem.src = parametros.src;
+  cartao.appendChild(imagem);
+  palco.appendChild(cartao);
+  const rotulo = posicionar(criarElemento("div", "rotulo-mono rotulo-verde", parametros.rotulo || ""), { position: "absolute", left: parametros.x + "px", top: (parametros.y - 36) + "px" });
+  palco.appendChild(rotulo);
+  const linhaPilulas = posicionar(criarElemento("div"), { position: "absolute", left: parametros.x + "px", width: parametros.largura + "px", top: (parametros.y + parametros.alturaImagem + 28) + "px", display: "flex", gap: "16px", justifyContent: parametros.centralizarPilulas ? "center" : "flex-start" });
+  const pilulas = (parametros.pilulas || []).map(function (texto) {
+    const pilula = posicionar(criarElemento("div", "pilula", '<span class="ponto"></span><span>' + texto + "</span>"), { position: "relative", fontSize: "26px" });
+    linhaPilulas.appendChild(pilula);
+    return pilula;
+  });
+  palco.appendChild(linhaPilulas);
+  let marca = null;
+  if (parametros.fundoCheio) { marca = posicionar(criarElemento("div", "marca-dagua", MARCA_DAGUA), { right: "60px", bottom: "48px" }); palco.appendChild(marca); }
+
+  return function desenhar(tempo) {
+    const visibilidadeGeral = opacidadeEntradaSaida(tempo, duracao, 0.3, 0.35);
+    if (fundo) fundo.style.opacity = visibilidadeGeral;
+    const entrada = suavizarSaida(progresso(tempo, 0.15, 0.5));
+    cartao.style.opacity = Math.min(entrada, visibilidadeGeral);
+    cartao.style.transform = "translateY(" + ((1 - entrada) * 24) + "px) scale(" + interpolar(0.96, 1, entrada) + ")";
+    rotulo.style.opacity = Math.min(progresso(tempo, 0.35, 0.3), visibilidadeGeral);
+    pilulas.forEach(function (pilula, indice) {
+      const entradaPilula = suavizarMola(progresso(tempo, (parametros.inicioPilulas || 0.9) + indice * 0.35, 0.5));
+      pilula.style.opacity = Math.min(limitar(entradaPilula * 1.6, 0, 1), visibilidadeGeral);
+      pilula.style.transform = "scale(" + interpolar(0.82, 1, entradaPilula) + ")";
+    });
+    if (marca) marca.style.opacity = visibilidadeGeral * 0.9;
+  };
+};
+
+/* Ilustração gerada (ícone, objeto 3D, tag) em PNG com fundo transparente, flutuando sem moldura.
+   Parâmetros: src, x, y, largura; opcionais: fundoCheio, rotulo (acima), legenda (abaixo), pilulas,
+   flutuar (padrão true, sobe e desce 8 px), brilho (padrão true, halo verde atrás), atrasoEntrada (s). */
+modelos.ilustracao = function (parametros) {
+  const duracao = parametros.duracao;
+  const atrasoEntrada = parametros.atrasoEntrada || 0.1;
+  let fundo = null;
+  if (parametros.fundoCheio) { fundo = criarElemento("div", "fundo-cheio"); palco.appendChild(fundo); }
+  const grupo = posicionar(criarElemento("div"), { position: "absolute", left: parametros.x + "px", top: parametros.y + "px", width: parametros.largura + "px" });
+  let halo = null;
+  if (parametros.brilho !== false) {
+    halo = posicionar(criarElemento("div"), { position: "absolute", left: "10%", top: "10%", width: "80%", height: "80%", borderRadius: "50%",
+      background: "radial-gradient(circle, rgba(28,252,119,0.28), rgba(28,252,119,0) 70%)", filter: "blur(30px)" });
+    grupo.appendChild(halo);
+  }
+  const imagem = posicionar(criarElemento("img"), { position: "relative", display: "block", width: "100%", filter: "drop-shadow(0 24px 40px rgba(0,0,0,0.55))" });
+  imagem.src = parametros.src;
+  grupo.appendChild(imagem);
+  palco.appendChild(grupo);
+  let rotulo = null;
+  if (parametros.rotulo) {
+    rotulo = posicionar(criarElemento("div", "rotulo-mono rotulo-verde", parametros.rotulo), { position: "absolute", left: parametros.x + "px", width: parametros.largura + "px", textAlign: "center", top: (parametros.y - 40) + "px" });
+    palco.appendChild(rotulo);
+  }
+  const alturaEstimada = parametros.alturaImagem || parametros.largura;
+  let legenda = null;
+  if (parametros.legenda) {
+    legenda = posicionar(criarElemento("div", "titulo-grande", parametros.legenda.replace(/\*([^*]+)\*/g, '<span class="destaque">$1</span>')), { position: "absolute", left: (parametros.x - 200) + "px", width: (parametros.largura + 400) + "px", textAlign: "center",
+      top: (parametros.y + alturaEstimada + 24) + "px", fontSize: (parametros.tamanhoLegenda || 44) + "px", color: "var(--cor-texto)" });
+    palco.appendChild(legenda);
+  }
+  const linhaPilulas = posicionar(criarElemento("div"), { position: "absolute", left: (parametros.x - 300) + "px", width: (parametros.largura + 600) + "px",
+    top: (parametros.y + alturaEstimada + (legenda ? 96 : 28)) + "px", display: "flex", gap: "16px", justifyContent: "center" });
+  const pilulas = (parametros.pilulas || []).map(function (texto) {
+    const pilula = posicionar(criarElemento("div", "pilula", '<span class="ponto"></span><span>' + texto + "</span>"), { position: "relative", fontSize: "26px" });
+    linhaPilulas.appendChild(pilula);
+    return pilula;
+  });
+  palco.appendChild(linhaPilulas);
+  let marca = null;
+  if (parametros.fundoCheio) { marca = posicionar(criarElemento("div", "marca-dagua", MARCA_DAGUA), { right: "60px", bottom: "48px" }); palco.appendChild(marca); }
+
+  return function desenhar(tempo) {
+    const visibilidadeGeral = opacidadeEntradaSaida(tempo, duracao, 0.3, 0.35);
+    if (fundo) fundo.style.opacity = visibilidadeGeral;
+    const entrada = suavizarMola(progresso(tempo, atrasoEntrada, 0.6));
+    const flutuacao = parametros.flutuar === false ? 0 : Math.sin(tempo * 1.6) * 8;
+    grupo.style.opacity = Math.min(limitar(entrada * 1.4, 0, 1), visibilidadeGeral);
+    grupo.style.transform = "translateY(" + ((1 - entrada) * 40 + flutuacao) + "px) scale(" + interpolar(0.86, 1, entrada) + ")";
+    if (halo) halo.style.opacity = 0.75 + Math.sin(tempo * 2.2) * 0.25;
+    if (rotulo) rotulo.style.opacity = Math.min(progresso(tempo, atrasoEntrada + 0.3, 0.3), visibilidadeGeral);
+    if (legenda) {
+      const entradaLegenda = suavizarSaida(progresso(tempo, atrasoEntrada + 0.35, 0.45));
+      legenda.style.opacity = Math.min(entradaLegenda, visibilidadeGeral);
+      legenda.style.transform = "translateY(" + ((1 - entradaLegenda) * 18) + "px)";
+    }
+    pilulas.forEach(function (pilula, indice) {
+      const entradaPilula = suavizarMola(progresso(tempo, (parametros.inicioPilulas || atrasoEntrada + 0.8) + indice * 0.35, 0.5));
+      pilula.style.opacity = Math.min(limitar(entradaPilula * 1.6, 0, 1), visibilidadeGeral);
+      pilula.style.transform = "scale(" + interpolar(0.82, 1, entradaPilula) + ")";
+    });
+    if (marca) marca.style.opacity = visibilidadeGeral * 0.9;
+  };
+};
+
+/* Transição discreta: linha verde fina varrendo a tela sobre um escurecimento rápido. */
+modelos.transicao = function (parametros) {
+  const duracao = parametros.duracao;
+  const escurecimento = posicionar(criarElemento("div"), { position: "absolute", inset: "0", background: "#0A0A0A" });
+  const linhaVarredura = posicionar(criarElemento("div"), { position: "absolute", top: "0", bottom: "0", width: "3px", background: "var(--cor-verde)", boxShadow: "0 0 24px 4px rgba(28,252,119,0.55)" });
+  palco.appendChild(escurecimento);
+  palco.appendChild(linhaVarredura);
+  return function desenhar(tempo) {
+    const avanco = tempo / duracao;
+    escurecimento.style.opacity = (avanco < 0.5 ? suavizarEntradaSaida(avanco / 0.5) : 1 - suavizarEntradaSaida((avanco - 0.5) / 0.5)) * (parametros.intensidade || 0.85);
+    linhaVarredura.style.left = (interpolar(-20, 1940, suavizarEntradaSaida(avanco))) + "px";
+    linhaVarredura.style.opacity = Math.sin(Math.PI * avanco) * 0.9;
+  };
+};
+
+/* ---------- interface usada pelo renderizador ---------- */
+window.prepararMotion = async function (especificacao) {
+  palco.innerHTML = "";
+  await document.fonts.ready;
+  await Promise.all(["Space Grotesk", "Inter", "JetBrains Mono"].map(function (familia) {
+    return Promise.all([400, 500, 700].map(function (peso) { return document.fonts.load(peso + " 40px '" + familia + "'").catch(function () {}); }));
+  }));
+  const construtor = modelos[especificacao.tipo];
+  if (!construtor) throw new Error("Modelo de motion desconhecido: " + especificacao.tipo);
+  motionAtual = { especificacao: especificacao, desenhar: construtor(especificacao) };
+  return Math.round(especificacao.duracao * QUADROS_POR_SEGUNDO);
+};
+window.desenharQuadro = function (indiceQuadro) {
+  motionAtual.desenhar(indiceQuadro / QUADROS_POR_SEGUNDO);
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+{
+ "_instrucoes": "Tempos em segundos do BRUTO. 'remover' = trechos que saem além dos automáticos (silêncio e gagueira). Use 'exato': true para não encaixar o corte no respiro mais próximo. 'manter' protege trechos de qualquer corte automático. 'correcoes_texto' = [regex, substituição] aplicadas só na legenda .srt e no cortes.csv.",
+ "duracao_bruto": 0.0,
+ "remover": [
+  {
+   "inicio": 0.0,
+   "fim": 0.0,
+   "motivo": "retomada: ..."
+  }
+ ],
+ "manter": [],
+ "correcoes_texto": [
+  [
+   "Cloud Code",
+   "Claude Code"
+  ],
+  [
+   "cloud code",
+   "Claude Code"
+  ],
+  [
+   "Menorio",
+   "Menoli"
+  ],
+  [
+   "80 %",
+   "80%"
+  ],
+  [
+   "uvversion",
+   "uv --version"
+  ],
+  [
+   "uv to install",
+   "uv tool install"
+  ],
+  [
+   "Graphify menos menos version",
+   "graphify --version"
+  ],
+  [
+   "Sony 5",
+   "Sonnet 5.5"
+  ],
+  [
+   "cachê",
+   "cache"
+  ],
+  [
+   "Claudio",
+   "Claude"
+  ],
+  [
+   "barra ghost",
+   "barra cost"
+  ],
+  [
+   "Cláudio",
+   "Claude"
+  ],
+  [
+   "nosso cloud",
+   "nosso Claude"
+  ],
+  [
+   "o cloud",
+   "o Claude"
+  ],
+  [
+   "seu cloud",
+   "seu Claude"
+  ],
+  [
+   "cloud \\.md",
+   "CLAUDE.md"
+  ],
+  [
+   "arquivo \\.cloud",
+   "arquivo .claude"
+  ],
+  [
+   "Graph \\.HTML",
+   "graph.html"
+  ],
+  [
+   "Graph HTML",
+   "graph.html"
+  ],
+  [
+   "back -end",
+   "back-end"
+  ],
+  [
+   "front -end",
+   "front-end"
+  ],
+  [
+   "agente de A,",
+   "agente de IA,"
+  ],
+  [
+   "100 %",
+   "100%"
+  ],
+  [
+   "40 %",
+   "40%"
+  ],
+  [
+   "Cloud Code",
+   "Claude Code"
+  ],
+  [
+   "(?<!em )\\bcloud\\b",
+   "Claude"
+  ],
+  [
+   "o Cloud realmente",
+   "o Claude realmente"
+  ],
+  [
+   "o Cloud$",
+   "o Claude"
+  ],
+  [
+   "Eu, eu garanti",
+   "Eu garanti"
+  ]
+ ]
+}

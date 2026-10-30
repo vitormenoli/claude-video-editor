@@ -1,0 +1,13 @@
+{
+  "name": "editor-video-longo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Motor de motions por código (Playwright) do editor de vídeo longo",
+  "scripts": {
+    "motions": "node motions/renderizar.js",
+    "previa": "node motions/renderizar.js"
+  },
+  "dependencies": {
+    "playwright": "^1.47.0"
+  }
+}
