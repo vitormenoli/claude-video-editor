@@ -1,5 +1,5 @@
 {
-  "name": "editor-video-longo",
+  "name": "claude-video-editor",
   "version": "1.0.0",
   "private": true,
   "description": "Motor de motions por código (Playwright) do editor de vídeo longo",

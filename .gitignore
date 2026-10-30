@@ -10,7 +10,5 @@ _edicao/
 partes/
 saida_webm/
 previa/
-motions/imagens/*
-!motions/imagens/.gitkeep
 node_modules/
 __pycache__/

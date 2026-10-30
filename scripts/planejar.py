@@ -6,6 +6,7 @@
 Uso: python3 planejar.py <transcricao.jsonl> <mapa_tempo.json> <roteiro_motions.json> <pasta_saida> [--ate=SEGUNDOS_DE_SAIDA]
 """
 import json
+import os
 import re
 import sys
 import unicodedata
@@ -20,16 +21,13 @@ SONS_POR_TIPO = {
     "comando": [("sfx_digitacao.wav", 0.3)],
     "comparacao": [("sfx_sopro.wav", 0.0), ("sfx_contador.wav", 0.9), ("sfx_contador.wav", 1.8), ("sfx_impacto.wav", 3.2)],
     "painel": [("sfx_sopro.wav", 0.0)],
-    "grafo": [("sfx_sopro.wav", 0.0)],
     "leitura": [("sfx_sopro.wav", 0.0), ("sfx_contador.wav", 1.0)],
     "numero": [("sfx_sopro.wav", 0.0), ("sfx_pop.wav", 0.3)],
     "transicao": [("sfx_sopro.wav", 0.0)],
     "imagem": [("sfx_sopro.wav", 0.0), ("sfx_pop.wav", 0.9)],
-    "ilustracao": [("sfx_sopro.wav", 0.0), ("sfx_pop.wav", 0.45)],
 }
 MODO_POR_TIPO = {"abertura": "sobreposto", "capitulo": "sobreposto", "pilula": "sobreposto", "comando": "sobreposto", "transicao": "sobreposto",
-                 "comparacao": "tela_cheia", "grafo": "tela_cheia", "leitura": "tela_cheia", "numero": "tela_cheia", "painel": "tela_cheia", "imagem": "sobreposto",
-                 "ilustracao": "sobreposto"}
+                 "comparacao": "tela_cheia", "leitura": "tela_cheia", "numero": "tela_cheia", "painel": "tela_cheia", "imagem": "sobreposto"}
 
 
 def normalizar(texto):
@@ -138,7 +136,15 @@ def principal():
         partes.append([round(inicio_parte, 4), round(fim_parte, 4)])
         inicio_parte = fim_parte
 
-    plano = dict(roteiro["configuracao"])
+    # Os caminhos e volumes vêm do bloco "configuracao" do roteiro ou, se ele não existir, do configuracao_video.json
+    # que o preparar_video.py gera na mesma pasta do roteiro.
+    caminho_configuracao_video = os.path.join(os.path.dirname(os.path.abspath(caminho_roteiro)), "configuracao_video.json")
+    configuracao = roteiro.get("configuracao") or json.load(open(caminho_configuracao_video, encoding="utf-8"))
+    plano = dict(configuracao)
+    if not plano.get("usar_efeitos_sonoros", True):
+        efeitos = []
+    if not plano.get("encerramento") and "fade_final" not in plano:
+        plano["fade_final"] = 0.8
     plano["trechos"] = [[trecho["inicio_fonte"], trecho["fim_fonte"]] for trecho in mapa]
     plano["motions"] = ordenados
     plano["efeitos_sonoros"] = sorted(efeitos, key=lambda efeito: efeito["tempo"])

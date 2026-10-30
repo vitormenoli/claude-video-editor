@@ -1,301 +1,230 @@
 {
- "_instrucoes": "Copie para a pasta do vídeo e troque os caminhos em configuracao pelos caminhos do SHELL DO COMPUTADOR (ex.: /sessions/<sessao>/mnt/Editor 2/...). Cada motion é ancorado numa frase do BRUTO (como aparece na transcricao_large.jsonl, sem pontuação), com 'depois_de' (segundos do bruto) para achar a ocorrência certa e 'ajuste' (segundos) para adiantar/atrasar. Tipos: abertura, capitulo, transicao, pilula, comando, painel (layout 'dividido' = tela à direita), comparacao, grafo, leitura, numero, imagem, ilustracao (PNG transparente gerado no ChatGPT, em motions/imagens/). Para escolher sons diferentes do padrão use 'sons': [[arquivo, deslocamento_s], ...]. Opcional 'nome' para fixar o nome do .webm. 'desfoques_fonte' (opcional): áreas da tela a desfocar, com tempos do BRUTO e região em pixels de 1920x1080.",
- "configuracao": {
-  "pasta_trabalho": "<CAMINHO NO COMPUTADOR>/_edicao",
-  "video_bruto": "<CAMINHO NO COMPUTADOR>/<bruto>.mp4",
-  "voz_bruta_48k": "<CAMINHO NO COMPUTADOR>/voz_48k.wav",
-  "musica": "<CAMINHO NO COMPUTADOR>/_edicao/musica_fundo.mp3",
-  "musica_lufs_original": -9.4,
-  "musica_alvo_lufs": -40.0,
-  "ducking_db": -8.0,
-  "efeitos_ganho_db": -24.0,
-  "encerramento": "<CAMINHO NO COMPUTADOR>/Intro Logo animada.mp4",
-  "duracao_encerramento": 5.994667,
-  "crossfade_final": 0.5
- },
+ "_instrucoes": "Cada motion é ancorado numa frase do BRUTO, como aparece na transcricao_large.jsonl (sem pontuação). 'depois_de' (segundos do bruto) acha a ocorrência certa da frase; 'ajuste' (segundos) adianta ou atrasa. Os caminhos e volumes vêm do _edicao/configuracao_video.json (gerado pelo preparar_video.py): não precisa de bloco 'configuracao' aqui. 'capitulo' marca o início de um capítulo do YouTube. 'sons' troca os efeitos padrão: [[arquivo, deslocamento_s], ...]. 'nome' fixa o nome do .webm. 'desfoques_fonte': áreas da tela a desfocar, com tempos do BRUTO e região em pixels de 1920x1080. Referência completa em referencias/modelos_de_motion.md.",
+ "desfoques_fonte": [
+  {
+   "inicio": 95.0,
+   "fim": 104.5,
+   "x": 0,
+   "y": 80,
+   "largura": 1920,
+   "altura": 900
+  }
+ ],
  "motions": [
   {
-   "frase": "como usar o graphify",
+   "frase": "hoje eu vou mostrar como instalar",
    "ajuste": -0.2,
-   "capitulo": "Gancho",
-   "sons": [
-    [
-     "sfx_sopro.wav",
-     0.0
-    ],
-    [
-     "sfx_pop.wav",
-     1.1
-    ]
-   ],
+   "capitulo": "Introdução",
    "motion": {
     "tipo": "abertura",
     "duracao": 4.0,
     "x": 560,
     "y": 650,
     "largura": 800,
-    "rotulo": "// teste real",
+    "rotulo": "// tutorial",
     "tamanhoTitulo": 60,
     "linhas": [
-     "Como usar o *Graphify*",
-     "no *Claude Code*"
+     "Como instalar o *FFmpeg*",
+     "no Windows"
     ],
     "pilulas": [
-     "economia de tokens",
-     "testei"
+     "passo a passo",
+     "grátis"
     ]
    }
   },
   {
-   "frase": "80 % o consumo",
-   "ajuste": -0.3,
-   "motion": {
-    "tipo": "numero",
-    "duracao": 3.4,
-    "texto": "-80%<span style='color:var(--cor-amarelo)'>?</span>",
-    "legenda": "menos tokens · é o que prometem",
-    "tamanho": 240,
-    "topo": 340
-   }
-  },
-  {
-   "frase": "<frase do bruto onde a ideia aparece>",
-   "depois_de": 0,
-   "ajuste": -0.2,
-   "motion": {
-    "tipo": "ilustracao",
-    "duracao": 5.0,
-    "fundoCheio": true,
-    "src": "imagens/cadeado_aberto.png",
-    "x": 760,
-    "y": 200,
-    "largura": 400,
-    "rotulo": "teste 1",
-    "legenda": "Jailbreak *aplicado*",
-    "pilulas": [
-     "mais direto",
-     "recusa menos?"
-    ]
-   }
-  },
-  {
-   "frase": "<outra frase, com a tela importante>",
-   "depois_de": 0,
-   "ajuste": -0.2,
-   "motion": {
-    "tipo": "ilustracao",
-    "duracao": 6.0,
-    "layout": "dividido",
-    "src": "imagens/escudo_protecao.png",
-    "x": 110,
-    "y": 260,
-    "largura": 360,
-    "legenda": "Proteção *ativa*"
-   }
-  },
-  {
-   "frase": "usando o meu cloud code",
-   "depois_de": 0,
-   "ajuste": 0.3,
-   "motion": {
-    "tipo": "pilula",
-    "duracao": 2.8,
-    "x": 1860,
-    "y": 940,
-    "texto": "Claude Code",
-    "alinhamento": "direita",
-    "rotulo": "agente usado no teste"
-   }
-  },
-  {
-   "frase": "mas antes vou dar um breve contexto",
-   "depois_de": 0,
+   "frase": "primeiro vamos baixar",
+   "depois_de": 20,
    "ajuste": -0.4,
+   "nome": "t02_transicao",
    "motion": {
     "tipo": "transicao",
     "duracao": 0.4
    }
   },
   {
-   "frase": "mas antes vou dar um breve contexto",
-   "depois_de": 0,
-   "ajuste": 0.05000000000000002,
+   "frase": "primeiro vamos baixar",
+   "depois_de": 20,
+   "ajuste": 0.0,
    "motion": {
     "tipo": "capitulo",
     "duracao": 2.8,
     "x": 56,
     "y": 56,
-    "numero": "02 / 08",
-    "titulo": "O que é"
+    "numero": "02 / 04",
+    "titulo": "Download"
    }
   },
   {
-   "frase": "tokens são basicamente",
+   "frase": "abre o terminal e digita",
+   "depois_de": 30,
    "ajuste": 0.2,
-   "motion": {
-    "tipo": "painel",
-    "duracao": 10.5,
-    "rotulo": "contexto",
-    "linhas": [
-     "Tokens são *pedaços*",
-     "de texto"
-    ],
-    "topo": 260,
-    "itens": [
-     {
-      "texto": "sua pergunta",
-      "inicio": 4.2
-     },
-     {
-      "texto": "o código enviado",
-      "inicio": 5.2
-     },
-     {
-      "texto": "a resposta",
-      "inicio": 6.8
-     },
-     {
-      "texto": "tudo consome tokens",
-      "inicio": 8.2
-     }
-    ]
-   }
-  },
-  {
-   "frase": "imagina então que você tem um projeto",
-   "ajuste": -0.2,
-   "motion": {
-    "tipo": "leitura",
-    "duracao": 17.0,
-    "titulo": "Relê *tudo* toda vez",
-    "tituloJanela": "projeto · arquivos",
-    "rotuloContador": "tokens gastos · exemplo ilustrativo",
-    "valorInicial": 3000,
-    "valorFinal": 480000,
-    "arquivos": [
-     "projeto/",
-     "├─ src/",
-     "│  ├─ app.ts",
-     "│  ├─ rotas/",
-     "│  │  ├─ usuarios.ts",
-     "│  │  ├─ pedidos.ts",
-     "│  │  └─ pagamentos.ts",
-     "│  ├─ servicos/",
-     "│  │  ├─ email.ts",
-     "│  │  ├─ fila.ts",
-     "│  │  └─ cache.ts",
-     "│  ├─ modelos/",
-     "│  │  ├─ usuario.ts",
-     "│  │  ├─ pedido.ts",
-     "│  │  └─ produto.ts",
-     "│  └─ utils/",
-     "│     ├─ datas.ts",
-     "│     └─ logs.ts",
-     "├─ docs/",
-     "│  ├─ arquitetura.md",
-     "│  ├─ api.md",
-     "│  └─ manual.pdf",
-     "├─ testes/",
-     "│  ├─ pedidos.test.ts",
-     "│  └─ usuarios.test.ts",
-     "└─ banco/",
-     "   └─ schema.sql"
-    ]
-   }
-  },
-  {
-   "frase": "cria uma espécie de mapa",
-   "ajuste": -0.3,
-   "motion": {
-    "tipo": "grafo",
-    "duracao": 14.5,
-    "rotulo": "o que o graphify faz",
-    "titulo": "Um *mapa* do projeto"
-   }
-  },
-  {
-   "frase": "winget",
-   "depois_de": 440,
-   "ajuste": -0.2,
    "motion": {
     "tipo": "comando",
     "duracao": 4.6,
     "x": 40,
     "y": 860,
     "largura": 700,
-    "comando": "winget install --id astral-sh.uv -e",
+    "comando": "winget install Gyan.FFmpeg",
     "tituloJanela": "powershell",
     "prompt": "PS> ",
     "tamanhoFonte": 26
    }
   },
   {
-   "frase": "está utilizando o graphify para fazer o graph",
-   "depois_de": 1095,
-   "ajuste": -0.4,
+   "frase": "o que ele faz na prática",
+   "depois_de": 40,
+   "ajuste": -0.3,
    "motion": {
     "tipo": "painel",
-    "layout": "dividido",
-    "duracao": 9.5,
-    "rotulo": "o que ele gera",
+    "duracao": 10.0,
+    "rotulo": "o que é",
     "linhas": [
-     "3 arquivos",
-     "*de saída*"
+     "Converte *qualquer* vídeo"
     ],
+    "topo": 300,
     "itens": [
      {
-      "texto": "graph.html · mapa visual"
+      "texto": "corta e junta",
+      "inicio": 1.5
      },
      {
-      "texto": "GRAPH_REPORT.md · resumo"
+      "texto": "muda o formato",
+      "inicio": 3.5
      },
      {
-      "texto": "graph.json · dados"
+      "texto": "funciona offline?",
+      "cor": "amarelo",
+      "inicio": 6.0
      }
     ]
    }
   },
   {
-   "frase": "sem o graphify a gente teve um custo estimado",
-   "depois_de": 2530,
-   "ajuste": -0.4,
-   "capitulo_climax": true,
+   "frase": "olha a resposta aqui na tela",
+   "depois_de": 60,
+   "ajuste": -0.2,
    "motion": {
-    "tipo": "comparacao",
-    "duracao": 13.0,
-    "titulo": "Teste de *tokens*",
-    "subtitulo": "3 perguntas · mesmo modelo · sessão nova · medido com /cost",
-    "lados": [
+    "tipo": "painel",
+    "duracao": 8.0,
+    "layout": "dividido",
+    "rotulo": "resultado",
+    "linhas": [
+     "Instalou",
+     "*sem erro*"
+    ],
+    "itens": [
      {
-      "rotulo": "sem graphify",
-      "valor": 0.2593,
-      "prefixo": "US$ ",
-      "casasDecimais": 4,
-      "unidade": "custo estimado · 367,6 mil tokens",
-      "vencedor": true
+      "texto": "versão 7.1",
+      "inicio": 1.2
      },
      {
-      "rotulo": "com graphify",
-      "valor": 0.3644,
-      "prefixo": "US$ ",
-      "casasDecimais": 4,
-      "unidade": "custo estimado · 557,9 mil tokens"
+      "texto": "PATH configurado",
+      "inicio": 3.0
+     }
+    ]
+   }
+  },
+  {
+   "frase": "ficou três vezes mais rápido",
+   "depois_de": 80,
+   "ajuste": -0.3,
+   "motion": {
+    "tipo": "numero",
+    "duracao": 4.0,
+    "texto": "3x",
+    "legenda": "mais rápido no meu teste",
+    "tamanho": 220,
+    "topo": 360
+   }
+  },
+  {
+   "frase": "comparando os dois",
+   "depois_de": 100,
+   "ajuste": -0.2,
+   "motion": {
+    "tipo": "comparacao",
+    "duracao": 12.0,
+    "titulo": "Tempo de *conversão*",
+    "subtitulo": "mesmo arquivo · mesmo computador",
+    "lados": [
+     {
+      "rotulo": "programa A",
+      "valor": 42.0,
+      "casasDecimais": 1,
+      "sufixo": " s",
+      "unidade": "tempo total"
+     },
+     {
+      "rotulo": "FFmpeg",
+      "valor": 13.8,
+      "casasDecimais": 1,
+      "sufixo": " s",
+      "unidade": "tempo total",
+      "vencedor": true
      }
     ],
-    "delta": "↑ 40,5% mais caro com o Graphify",
-    "deltaNegativo": true,
-    "fonte": "números da tela do /cost · cache incluso · projeto spotify-replica"
+    "delta": "↓ 67% mais rápido com o FFmpeg",
+    "fonte": "números da tela · cronômetro do terminal"
    }
-  }
- ],
- "desfoques_fonte": [
+  },
   {
-   "inicio": 364.2,
-   "fim": 382.5,
-   "x": 56,
-   "y": 96,
-   "largura": 1864,
-   "altura": 920
+   "frase": "ele lê todos os arquivos",
+   "depois_de": 120,
+   "ajuste": -0.2,
+   "motion": {
+    "tipo": "leitura",
+    "duracao": 10.0,
+    "titulo": "Lê *tudo* de novo",
+    "tituloJanela": "projeto · arquivos",
+    "rotuloContador": "arquivos lidos",
+    "valorInicial": 0,
+    "valorFinal": 240,
+    "arquivos": [
+     "projeto/",
+     "├─ src/",
+     "│  ├─ app.ts",
+     "│  └─ rotas.ts",
+     "├─ docs/",
+     "│  └─ api.md",
+     "└─ testes/",
+     "   └─ app.test.ts"
+    ]
+   }
+  },
+  {
+   "frase": "esse é o site oficial",
+   "depois_de": 140,
+   "ajuste": -0.2,
+   "motion": {
+    "tipo": "imagem",
+    "duracao": 5.0,
+    "fundoCheio": true,
+    "src": "C:/caminho/para/_edicao/imagens/site_oficial.png",
+    "x": 360,
+    "y": 200,
+    "largura": 1200,
+    "alturaImagem": 640,
+    "rotulo": "site oficial",
+    "pilulas": [
+     "ffmpeg.org"
+    ],
+    "centralizarPilulas": true
+   }
+  },
+  {
+   "frase": "deixa o seu like",
+   "depois_de": 170,
+   "ajuste": 0.0,
+   "motion": {
+    "tipo": "pilula",
+    "duracao": 3.6,
+    "x": 1860,
+    "y": 940,
+    "alinhamento": "direita",
+    "texto": "like · inscreva-se"
+   }
   }
  ]
 }

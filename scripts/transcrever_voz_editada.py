@@ -16,7 +16,7 @@ import sys
 import numpy as np
 from faster_whisper import WhisperModel
 
-PROMPT_INICIAL = "Fala pessoal, Menoli falando. Claude, Anthropic, jailbreak, prompt, Discord."
+PROMPT_INICIAL = "Olá, pessoal. No vídeo de hoje eu vou mostrar como funciona, passo a passo."
 
 
 def principal():

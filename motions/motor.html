@@ -2,22 +2,22 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<title>Motor de Motions · Vitor Menoli</title>
+<title>Motor de Motions</title>
 <style>
-  @font-face { font-family: "Space Grotesk"; font-weight: 500; src: url("fontes/space-grotesk-latin-500-normal.woff2") format("woff2"); }
-  @font-face { font-family: "Space Grotesk"; font-weight: 700; src: url("fontes/space-grotesk-latin-700-normal.woff2") format("woff2"); }
   @font-face { font-family: "Inter"; font-weight: 400; src: url("fontes/inter-latin-400-normal.woff2") format("woff2"); }
   @font-face { font-family: "Inter"; font-weight: 500; src: url("fontes/inter-latin-500-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Inter"; font-weight: 700; src: url("fontes/inter-latin-700-normal.woff2") format("woff2"); }
   @font-face { font-family: "JetBrains Mono"; font-weight: 400; src: url("fontes/jetbrains-mono-latin-400-normal.woff2") format("woff2"); }
   @font-face { font-family: "JetBrains Mono"; font-weight: 500; src: url("fontes/jetbrains-mono-latin-500-normal.woff2") format("woff2"); }
   @font-face { font-family: "JetBrains Mono"; font-weight: 700; src: url("fontes/jetbrains-mono-latin-700-normal.woff2") format("woff2"); }
 
   :root {
-    --cor-fundo: #0A0A0A;
+    --cor-fundo: #0F1115;
     --cor-grafite: #111312;
-    --cor-verde: #1CFC77;
-    --cor-verde-escuro: rgba(28, 252, 119, 0.12);
-    --cor-verde-borda: rgba(28, 252, 119, 0.55);
+    --cor-destaque: #4F8CFF;
+    --cor-destaque-rgb: 79 140 255;
+    --cor-destaque-fundo: rgb(var(--cor-destaque-rgb) / 0.12);
+    --cor-destaque-borda: rgb(var(--cor-destaque-rgb) / 0.55);
     --cor-texto: #F2F2F2;
     --cor-cinza: #9BA19D;
     --cor-cinza-escuro: #3A3F3C;
@@ -31,7 +31,7 @@
   .fundo-cheio {
     position: absolute; inset: 0; background-color: var(--cor-fundo);
     background-image:
-      radial-gradient(ellipse 60% 50% at 50% 45%, rgba(28, 252, 119, 0.10), rgba(28, 252, 119, 0) 70%),
+      radial-gradient(ellipse 60% 50% at 50% 45%, rgb(var(--cor-destaque-rgb) / 0.10), rgb(var(--cor-destaque-rgb) / 0) 70%),
       linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
     background-size: 100% 100%, 48px 48px, 48px 48px;
@@ -43,8 +43,8 @@
   .palavra { display: inline-block; white-space: pre; }
 
   .cartao {
-    position: absolute; background: rgba(10, 10, 10, 0.92); border: 1px solid var(--cor-verde-borda); border-radius: 18px;
-    box-shadow: 0 0 0 1px rgba(28, 252, 119, 0.08), 0 0 48px rgba(28, 252, 119, 0.14), 0 24px 60px rgba(0, 0, 0, 0.55);
+    position: absolute; background: rgba(10, 10, 10, 0.92); border: 1px solid var(--cor-destaque-borda); border-radius: 18px;
+    box-shadow: 0 0 0 1px rgb(var(--cor-destaque-rgb) / 0.08), 0 0 48px rgb(var(--cor-destaque-rgb) / 0.14), 0 24px 60px rgba(0, 0, 0, 0.55);
     overflow: hidden;
   }
   .cartao-grade {
@@ -53,42 +53,42 @@
     background-size: 32px 32px;
   }
   .rotulo-mono { font-family: "JetBrains Mono", monospace; font-weight: 500; font-size: 18px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cor-cinza); }
-  .rotulo-verde { color: var(--cor-verde); }
-  .titulo-grande { font-family: "Space Grotesk", sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: -0.01em; }
-  .destaque { color: var(--cor-verde); }
+  .rotulo-destaque { color: var(--cor-destaque); }
+  .titulo-grande { font-family: "Inter", sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: -0.01em; }
+  .destaque { color: var(--cor-destaque); }
 
   .pilula {
     position: absolute; display: inline-flex; align-items: center; gap: 14px; white-space: nowrap;
     padding: 14px 26px; border-radius: 999px; background: rgba(10, 10, 10, 0.9);
-    border: 1.5px solid var(--cor-verde-borda);
-    box-shadow: inset 0 0 0 999px var(--cor-verde-escuro), 0 0 28px rgba(28, 252, 119, 0.18), 0 12px 30px rgba(0, 0, 0, 0.5);
-    font-family: "JetBrains Mono", monospace; font-weight: 500; font-size: 30px; color: var(--cor-verde);
+    border: 1.5px solid var(--cor-destaque-borda);
+    box-shadow: inset 0 0 0 999px var(--cor-destaque-fundo), 0 0 28px rgb(var(--cor-destaque-rgb) / 0.18), 0 12px 30px rgba(0, 0, 0, 0.5);
+    font-family: "JetBrains Mono", monospace; font-weight: 500; font-size: 30px; color: var(--cor-destaque);
   }
-  .pilula .ponto { width: 10px; height: 10px; border-radius: 50%; background: var(--cor-verde); box-shadow: 0 0 10px var(--cor-verde); }
+  .pilula .ponto { width: 10px; height: 10px; border-radius: 50%; background: var(--cor-destaque); box-shadow: 0 0 10px var(--cor-destaque); }
   .pilula-rotulo { position: absolute; font-family: "JetBrains Mono", monospace; font-size: 16px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cor-cinza); white-space: nowrap; }
 
-  .terminal-barra { display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 20px; border-bottom: 1px solid rgba(28, 252, 119, 0.22); background: rgba(255, 255, 255, 0.02); position: relative; }
+  .terminal-barra { display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 20px; border-bottom: 1px solid rgb(var(--cor-destaque-rgb) / 0.22); background: rgba(255, 255, 255, 0.02); position: relative; }
   .terminal-bolinha { width: 12px; height: 12px; border-radius: 50%; background: var(--cor-cinza-escuro); }
-  .terminal-bolinha.verde { background: var(--cor-verde); }
+  .terminal-bolinha.ativa { background: var(--cor-destaque); }
   .terminal-titulo { font-family: "JetBrains Mono", monospace; font-size: 16px; letter-spacing: 0.1em; color: var(--cor-cinza); margin-left: 8px; }
   .terminal-corpo { position: relative; padding: 26px 30px 30px; font-family: "JetBrains Mono", monospace; font-size: 34px; color: var(--cor-texto); white-space: pre; }
-  .terminal-prompt { color: var(--cor-verde); }
-  .cursor { display: inline-block; width: 0.55em; height: 1.05em; background: var(--cor-verde); vertical-align: -0.16em; margin-left: 2px; }
+  .terminal-prompt { color: var(--cor-destaque); }
+  .cursor { display: inline-block; width: 0.55em; height: 1.05em; background: var(--cor-destaque); vertical-align: -0.16em; margin-left: 2px; }
 
-  .numero-grande { font-family: "Space Grotesk", sans-serif; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .numero-grande { font-family: "Inter", sans-serif; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
   .barra-trilho { position: relative; height: 18px; border-radius: 999px; background: rgba(255, 255, 255, 0.06); overflow: hidden; }
   .barra-preenchimento { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; }
 
-  .linha-capitulo { position: absolute; height: 2px; background: var(--cor-verde); box-shadow: 0 0 12px var(--cor-verde); transform-origin: left center; }
-  .no-grafo { position: absolute; border-radius: 50%; }
+  .linha-capitulo { position: absolute; height: 2px; background: var(--cor-destaque); box-shadow: 0 0 12px var(--cor-destaque); transform-origin: left center; }
   svg { position: absolute; overflow: visible; }
 </style>
 </head>
 <body>
 <div id="palco"></div>
 <script>
-/* Marca d'água dos motions de tela cheia e do cartão de abertura: troque pelo nome do seu canal. */
-const MARCA_DAGUA = "› VITOR MENOLI";
+/* Marca d'água dos motions de tela cheia e do cartão de abertura. O renderizar.js troca pela marca do
+   config_editor.json (motions.marca_dagua) quando ela existe. */
+var MARCA_DAGUA = "";
 
 "use strict";
 
@@ -125,7 +125,7 @@ function opacidadeEntradaSaida(tempo, duracaoTotal, tempoEntrada, tempoSaida) {
   return Math.min(entrada, saida);
 }
 
-/* Texto que sobe de dentro de uma máscara, palavra por palavra (regra do CLAUDE.md, sem fade). */
+/* Texto que sobe de dentro de uma máscara, palavra por palavra (sem fade). */
 function criarLinhaMascarada(textoComDestaque, classeExtra) {
   const linha = criarElemento("span", "mascara-linha " + (classeExtra || ""));
   const interno = criarElemento("span");
@@ -163,7 +163,7 @@ modelos.abertura = function (parametros) {
   const cartao = posicionar(criarElemento("div", "cartao"), { left: parametros.x + "px", top: parametros.y + "px", width: parametros.largura + "px", padding: "40px 52px 44px" });
   cartao.appendChild(criarElemento("div", "cartao-grade"));
   const conteudo = posicionar(criarElemento("div"), { position: "relative" });
-  const rotulo = criarElemento("div", "rotulo-mono rotulo-verde", parametros.rotulo);
+  const rotulo = criarElemento("div", "rotulo-mono rotulo-destaque", parametros.rotulo);
   posicionar(rotulo, { marginBottom: "18px" });
   conteudo.appendChild(rotulo);
   const linhasTitulo = parametros.linhas.map(function (texto) {
@@ -213,7 +213,7 @@ modelos.capitulo = function (parametros) {
   const grupo = posicionar(criarElemento("div"), { position: "absolute", left: parametros.x + "px", top: parametros.y + "px" });
   const fundo = posicionar(criarElemento("div", "cartao"), { left: "0px", top: "0px", height: "96px", borderRadius: "14px" });
   grupo.appendChild(fundo);
-  const numero = posicionar(criarElemento("div", "rotulo-mono rotulo-verde", parametros.numero), { position: "absolute", left: "26px", top: "16px", fontSize: "17px", whiteSpace: "nowrap" });
+  const numero = posicionar(criarElemento("div", "rotulo-mono rotulo-destaque", parametros.numero), { position: "absolute", left: "26px", top: "16px", fontSize: "17px", whiteSpace: "nowrap" });
   const tituloMascarado = criarLinhaMascarada(parametros.titulo, "titulo-grande");
   posicionar(tituloMascarado.linha, { position: "absolute", left: "26px", top: "40px", fontSize: "36px", whiteSpace: "nowrap" });
   grupo.appendChild(numero);
@@ -269,7 +269,7 @@ modelos.pilula = function (parametros) {
 modelos.comando = function (parametros) {
   const duracao = parametros.duracao;
   const cartao = posicionar(criarElemento("div", "cartao"), { left: parametros.x + "px", top: parametros.y + "px", minWidth: parametros.largura + "px" });
-  const barra = criarElemento("div", "terminal-barra", '<span class="terminal-bolinha verde"></span><span class="terminal-bolinha"></span><span class="terminal-bolinha"></span><span class="terminal-titulo">' + (parametros.tituloJanela || "terminal") + "</span>");
+  const barra = criarElemento("div", "terminal-barra", '<span class="terminal-bolinha ativa"></span><span class="terminal-bolinha"></span><span class="terminal-bolinha"></span><span class="terminal-titulo">' + (parametros.tituloJanela || "terminal") + "</span>");
   cartao.appendChild(barra);
   const corpo = criarElemento("div", "terminal-corpo");
   if (parametros.tamanhoFonte) corpo.style.fontSize = parametros.tamanhoFonte + "px";
@@ -311,7 +311,7 @@ modelos.comando = function (parametros) {
   };
 };
 
-/* Comparação de dois números lado a lado (clímax do teste de tokens). */
+/* Comparação de dois números lado a lado (resultado de um teste). */
 modelos.comparacao = function (parametros) {
   const duracao = parametros.duracao;
   const fundo = criarElemento("div", "fundo-cheio");
@@ -329,15 +329,15 @@ modelos.comparacao = function (parametros) {
     const ehVencedor = lado.vencedor === true;
     const cartao = posicionar(criarElemento("div", "cartao"), {
       left: (esquerdaInicial + indice * (larguraCartao + espaco)) + "px", top: "340px", width: larguraCartao + "px", height: alturaCartao + "px",
-      borderColor: ehVencedor ? "var(--cor-verde-borda)" : "rgba(255,255,255,0.14)",
-      boxShadow: ehVencedor ? "0 0 60px rgba(28,252,119,0.18), 0 24px 60px rgba(0,0,0,0.55)" : "0 24px 60px rgba(0,0,0,0.55)"
+      borderColor: ehVencedor ? "var(--cor-destaque-borda)" : "rgba(255,255,255,0.14)",
+      boxShadow: ehVencedor ? "0 0 60px rgb(var(--cor-destaque-rgb) / 0.18), 0 24px 60px rgba(0,0,0,0.55)" : "0 24px 60px rgba(0,0,0,0.55)"
     });
     cartao.appendChild(criarElemento("div", "cartao-grade"));
-    const rotulo = posicionar(criarElemento("div", "rotulo-mono" + (ehVencedor ? " rotulo-verde" : ""), lado.rotulo), { position: "absolute", left: "44px", top: "40px", fontSize: "22px" });
-    const numero = posicionar(criarElemento("div", "numero-grande"), { position: "absolute", left: "40px", top: "92px", fontSize: "112px", whiteSpace: "nowrap", color: ehVencedor ? "var(--cor-verde)" : "var(--cor-texto)" });
+    const rotulo = posicionar(criarElemento("div", "rotulo-mono" + (ehVencedor ? " rotulo-destaque" : ""), lado.rotulo), { position: "absolute", left: "44px", top: "40px", fontSize: "22px" });
+    const numero = posicionar(criarElemento("div", "numero-grande"), { position: "absolute", left: "40px", top: "92px", fontSize: "112px", whiteSpace: "nowrap", color: ehVencedor ? "var(--cor-destaque)" : "var(--cor-texto)" });
     const unidade = posicionar(criarElemento("div", "rotulo-mono", lado.unidade), { position: "absolute", left: "44px", top: "236px", fontSize: "18px", textTransform: "none", letterSpacing: "0.06em" });
     const trilho = posicionar(criarElemento("div", "barra-trilho"), { position: "absolute", left: "44px", right: "44px", top: "292px" });
-    const preenchimento = posicionar(criarElemento("div", "barra-preenchimento"), { background: ehVencedor ? "var(--cor-verde)" : "#6B706D", boxShadow: ehVencedor ? "0 0 18px rgba(28,252,119,0.6)" : "none" });
+    const preenchimento = posicionar(criarElemento("div", "barra-preenchimento"), { background: ehVencedor ? "var(--cor-destaque)" : "#6B706D", boxShadow: ehVencedor ? "0 0 18px rgb(var(--cor-destaque-rgb) / 0.6)" : "none" });
     trilho.appendChild(preenchimento);
     [rotulo, numero, unidade, trilho].forEach(function (filho) { cartao.appendChild(filho); });
     palco.appendChild(cartao);
@@ -385,12 +385,12 @@ modelos.painel = function (parametros) {
   const larguraArea = layoutDividido ? 480 : 1920;
   let molduraTela = null;
   if (layoutDividido) {
-    molduraTela = posicionar(criarElemento("div"), { position: "absolute", left: "590px", top: "178px", width: "1284px", height: "724px", borderRadius: "6px", border: "2px solid rgba(28,252,119,0.45)", boxShadow: "0 0 60px rgba(28,252,119,0.16), 0 30px 80px rgba(0,0,0,0.6)", background: "#000" });
+    molduraTela = posicionar(criarElemento("div"), { position: "absolute", left: "590px", top: "178px", width: "1284px", height: "724px", borderRadius: "6px", border: "2px solid rgb(var(--cor-destaque-rgb) / 0.45)", boxShadow: "0 0 60px rgb(var(--cor-destaque-rgb) / 0.16), 0 30px 80px rgba(0,0,0,0.6)", background: "#000" });
     palco.appendChild(molduraTela);
   }
   const blocoTexto = posicionar(criarElemento("div"), { position: "absolute", left: areaEsquerda + "px", width: larguraArea + "px", top: (layoutDividido ? 200 : (parametros.topo || 230)) + "px", textAlign: layoutDividido ? "left" : "center" });
   palco.appendChild(blocoTexto);
-  const rotulo = posicionar(criarElemento("div", "rotulo-mono rotulo-verde", parametros.rotulo || ""), { marginBottom: "20px" });
+  const rotulo = posicionar(criarElemento("div", "rotulo-mono rotulo-destaque", parametros.rotulo || ""), { marginBottom: "20px" });
   blocoTexto.appendChild(rotulo);
   const linhasTitulo = (parametros.linhas || []).map(function (texto) {
     const linhaMascarada = criarLinhaMascarada(texto, "titulo-grande");
@@ -403,9 +403,9 @@ modelos.painel = function (parametros) {
   const itens = (parametros.itens || []).map(function (item) {
     let elemento;
     if (item.tipo === "cartao") {
-      elemento = posicionar(criarElemento("div", "cartao"), { position: "relative", width: (item.largura || 400) + "px", padding: "30px 34px", textAlign: "left", borderColor: item.apagado ? "rgba(255,255,255,0.14)" : "var(--cor-verde-borda)" });
+      elemento = posicionar(criarElemento("div", "cartao"), { position: "relative", width: (item.largura || 400) + "px", padding: "30px 34px", textAlign: "left", borderColor: item.apagado ? "rgba(255,255,255,0.14)" : "var(--cor-destaque-borda)" });
       elemento.appendChild(criarElemento("div", "cartao-grade"));
-      const rotuloItem = posicionar(criarElemento("div", "rotulo-mono" + (item.apagado ? "" : " rotulo-verde"), item.rotulo || ""), { position: "relative", fontSize: "16px", marginBottom: "14px" });
+      const rotuloItem = posicionar(criarElemento("div", "rotulo-mono" + (item.apagado ? "" : " rotulo-destaque"), item.rotulo || ""), { position: "relative", fontSize: "16px", marginBottom: "14px" });
       const valorItem = posicionar(criarElemento("div", item.mono ? "" : "numero-grande", item.valor), { position: "relative", fontSize: (item.tamanho || 54) + "px", fontFamily: item.mono ? "'JetBrains Mono', monospace" : "", color: item.cor || "var(--cor-texto)", whiteSpace: "nowrap" });
       elemento.appendChild(rotuloItem); elemento.appendChild(valorItem);
       if (item.detalhe) {
@@ -442,112 +442,7 @@ modelos.painel = function (parametros) {
   };
 };
 
-/* Grafo animado: nós aparecem e se conectam (ilustra o "mapa do projeto"). */
-modelos.grafo = function (parametros) {
-  const duracao = parametros.duracao;
-  const layoutDividido = parametros.layout === "dividido";
-  const fundo = criarElemento("div", "fundo-cheio");
-  palco.appendChild(fundo);
-  const centroX = layoutDividido ? 300 : 960, centroY = layoutDividido ? 640 : 600, raio = layoutDividido ? 200 : 300;
-  let semente = 7;
-  function aleatorioComSemente() { semente = (semente * 16807) % 2147483647; return (semente - 1) / 2147483646; }
-  const grupos = [
-    { cor: "#1CFC77", nome: "código", anguloBase: -2.3 },
-    { cor: "#7FB8FF", nome: "docs", anguloBase: -0.6 },
-    { cor: "#FFB86B", nome: "config", anguloBase: 1.0 },
-    { cor: "#F28DD6", nome: "PDFs", anguloBase: 2.5 }
-  ];
-  const nos = [];
-  grupos.forEach(function (grupo, indiceGrupo) {
-    const centroGrupoX = centroX + Math.cos(grupo.anguloBase) * raio * 0.62;
-    const centroGrupoY = centroY + Math.sin(grupo.anguloBase) * raio * 0.62;
-    for (let indiceNo = 0; indiceNo < 7; indiceNo++) {
-      const angulo = aleatorioComSemente() * Math.PI * 2;
-      const distancia = (indiceNo === 0 ? 0 : 0.18 + aleatorioComSemente() * 0.24) * raio;
-      nos.push({ x: centroGrupoX + Math.cos(angulo) * distancia, y: centroGrupoY + Math.sin(angulo) * distancia, cor: grupo.cor, grupo: indiceGrupo, principal: indiceNo === 0, atraso: 0.4 + indiceGrupo * 0.25 + indiceNo * 0.06 });
-    }
-  });
-  const arestas = [];
-  nos.forEach(function (no, indice) {
-    if (no.principal) return;
-    const principalDoGrupo = nos.find(function (outro) { return outro.grupo === no.grupo && outro.principal; });
-    arestas.push({ de: principalDoGrupo, para: no, atraso: no.atraso + 0.1 });
-  });
-  const principais = nos.filter(function (no) { return no.principal; });
-  for (let indice = 0; indice < principais.length; indice++) {
-    arestas.push({ de: principais[indice], para: principais[(indice + 1) % principais.length], atraso: 1.6 + indice * 0.12 });
-  }
-  const svgNamespace = "http://www.w3.org/2000/svg";
-  const desenho = document.createElementNS(svgNamespace, "svg");
-  desenho.setAttribute("width", "1920"); desenho.setAttribute("height", "1080");
-  posicionar(desenho, { left: "0px", top: "0px" });
-  palco.appendChild(desenho);
-  const linhasSvg = arestas.map(function (aresta) {
-    const linha = document.createElementNS(svgNamespace, "line");
-    linha.setAttribute("x1", aresta.de.x); linha.setAttribute("y1", aresta.de.y);
-    linha.setAttribute("stroke", aresta.para.principal ? "rgba(255,255,255,0.35)" : aresta.para.cor);
-    linha.setAttribute("stroke-opacity", "0.55"); linha.setAttribute("stroke-width", "1.6");
-    desenho.appendChild(linha);
-    return { linha: linha, aresta: aresta };
-  });
-  const circulosSvg = nos.map(function (no) {
-    const circulo = document.createElementNS(svgNamespace, "circle");
-    circulo.setAttribute("cx", no.x); circulo.setAttribute("cy", no.y); circulo.setAttribute("fill", no.cor);
-    circulo.setAttribute("style", "filter: drop-shadow(0 0 8px " + no.cor + ")");
-    desenho.appendChild(circulo);
-    return { circulo: circulo, no: no };
-  });
-  const legenda = posicionar(criarElemento("div"), { position: "absolute", left: layoutDividido ? "64px" : "0", right: layoutDividido ? "auto" : "0", top: (centroY + raio + 40) + "px", display: "flex", gap: "28px", justifyContent: "center" });
-  grupos.forEach(function (grupo) {
-    legenda.appendChild(criarElemento("div", "rotulo-mono", '<span style="color:' + grupo.cor + '">●</span> ' + grupo.nome));
-  });
-  palco.appendChild(legenda);
-  const blocoTitulo = posicionar(criarElemento("div"), { position: "absolute", left: layoutDividido ? "64px" : "0", right: layoutDividido ? "auto" : "0", top: layoutDividido ? "190px" : "120px", textAlign: layoutDividido ? "left" : "center", width: layoutDividido ? "480px" : "auto" });
-  const rotulo = posicionar(criarElemento("div", "rotulo-mono rotulo-verde", parametros.rotulo || ""), { marginBottom: "16px" });
-  blocoTitulo.appendChild(rotulo);
-  const titulo = criarLinhaMascarada(parametros.titulo, "titulo-grande");
-  posicionar(titulo.linha, { fontSize: (layoutDividido ? 52 : 76) + "px" });
-  blocoTitulo.appendChild(titulo.linha);
-  palco.appendChild(blocoTitulo);
-  let molduraTela = null;
-  if (layoutDividido) {
-    molduraTela = posicionar(criarElemento("div"), { position: "absolute", left: "590px", top: "178px", width: "1284px", height: "724px", borderRadius: "6px", border: "2px solid rgba(28,252,119,0.45)", boxShadow: "0 0 60px rgba(28,252,119,0.16), 0 30px 80px rgba(0,0,0,0.6)", background: "#000" });
-    palco.appendChild(molduraTela);
-  }
-  const marca = posicionar(criarElemento("div", "marca-dagua", MARCA_DAGUA), { left: layoutDividido ? "64px" : "auto", right: layoutDividido ? "auto" : "60px", bottom: "48px" });
-  palco.appendChild(marca);
-
-  return function desenhar(tempo) {
-    const visibilidadeGeral = opacidadeEntradaSaida(tempo, duracao, 0.3, 0.35);
-    fundo.style.opacity = visibilidadeGeral;
-    desenho.style.opacity = visibilidadeGeral;
-    if (molduraTela) molduraTela.style.opacity = visibilidadeGeral;
-    const rotacaoLenta = tempo * 0.04;
-    function posicaoGirada(no) {
-      const deslocX = no.x - centroX, deslocY = no.y - centroY;
-      return { x: centroX + deslocX * Math.cos(rotacaoLenta) - deslocY * Math.sin(rotacaoLenta), y: centroY + deslocX * Math.sin(rotacaoLenta) + deslocY * Math.cos(rotacaoLenta) };
-    }
-    circulosSvg.forEach(function (item) {
-      const entrada = suavizarMola(progresso(tempo, item.no.atraso, 0.5));
-      const posicao = posicaoGirada(item.no);
-      item.circulo.setAttribute("cx", posicao.x); item.circulo.setAttribute("cy", posicao.y);
-      item.circulo.setAttribute("r", Math.max(0, (item.no.principal ? 13 : 7) * entrada));
-    });
-    linhasSvg.forEach(function (item) {
-      const crescimento = suavizarEntradaSaida(progresso(tempo, item.aresta.atraso, 0.45));
-      const origem = posicaoGirada(item.aresta.de), destino = posicaoGirada(item.aresta.para);
-      item.linha.setAttribute("x1", origem.x); item.linha.setAttribute("y1", origem.y);
-      item.linha.setAttribute("x2", interpolar(origem.x, destino.x, crescimento));
-      item.linha.setAttribute("y2", interpolar(origem.y, destino.y, crescimento));
-    });
-    legenda.style.opacity = Math.min(progresso(tempo, 2.0, 0.4), visibilidadeGeral);
-    rotulo.style.opacity = Math.min(progresso(tempo, 0.2, 0.3), visibilidadeGeral);
-    animarPalavrasMascaradas(titulo.palavras, tempo, 0.3, 0.07, 0.42, duracao - 0.55, 0.3);
-    marca.style.opacity = visibilidadeGeral * 0.9;
-  };
-};
-
-/* Agente relendo arquivos: árvore de arquivos rolando dentro de um terminal + contador de tokens subindo. */
+/* Terminal rolando uma árvore de arquivos + contador subindo (ex.: arquivos lidos, tokens gastos). */
 modelos.leitura = function (parametros) {
   const duracao = parametros.duracao;
   const fundo = criarElemento("div", "fundo-cheio");
@@ -556,13 +451,13 @@ modelos.leitura = function (parametros) {
   posicionar(titulo.linha, { position: "absolute", left: "0", right: "0", top: "110px", textAlign: "center", fontSize: "76px" });
   palco.appendChild(titulo.linha);
   const cartao = posicionar(criarElemento("div", "cartao"), { left: "460px", top: "250px", width: "1000px", height: "430px" });
-  cartao.appendChild(criarElemento("div", "terminal-barra", '<span class="terminal-bolinha verde"></span><span class="terminal-bolinha"></span><span class="terminal-bolinha"></span><span class="terminal-titulo">' + (parametros.tituloJanela || "projeto · arquivos") + "</span>"));
+  cartao.appendChild(criarElemento("div", "terminal-barra", '<span class="terminal-bolinha ativa"></span><span class="terminal-bolinha"></span><span class="terminal-bolinha"></span><span class="terminal-titulo">' + (parametros.tituloJanela || "projeto · arquivos") + "</span>"));
   const janelaRolagem = posicionar(criarElemento("div"), { position: "absolute", left: "0", right: "0", top: "47px", bottom: "0", overflow: "hidden" });
   const listaArquivos = posicionar(criarElemento("div"), { position: "absolute", left: "40px", top: "20px", fontFamily: "'JetBrains Mono', monospace", fontSize: "26px", lineHeight: "40px", color: "var(--cor-texto)", whiteSpace: "pre" });
   const linhasArquivos = parametros.arquivos.map(function (textoLinha) {
     const ehPasta = textoLinha.trim().endsWith("/");
     const linha = criarElemento("div", "", textoLinha);
-    if (ehPasta) linha.style.color = "var(--cor-verde)";
+    if (ehPasta) linha.style.color = "var(--cor-destaque)";
     listaArquivos.appendChild(linha);
     return linha;
   });
@@ -598,7 +493,7 @@ modelos.leitura = function (parametros) {
   };
 };
 
-/* Número ou palavra gigante centralizada com legenda mono (ex.: "-80%?", "★ 136 mil"). */
+/* Número ou palavra gigante centralizada com legenda mono (ex.: "-80%?", "3x mais rápido"). */
 modelos.numero = function (parametros) {
   const duracao = parametros.duracao;
   const fundo = criarElemento("div", "fundo-cheio");
@@ -648,7 +543,7 @@ modelos.imagem = function (parametros) {
   imagem.src = parametros.src;
   cartao.appendChild(imagem);
   palco.appendChild(cartao);
-  const rotulo = posicionar(criarElemento("div", "rotulo-mono rotulo-verde", parametros.rotulo || ""), { position: "absolute", left: parametros.x + "px", top: (parametros.y - 36) + "px" });
+  const rotulo = posicionar(criarElemento("div", "rotulo-mono rotulo-destaque", parametros.rotulo || ""), { position: "absolute", left: parametros.x + "px", top: (parametros.y - 36) + "px" });
   palco.appendChild(rotulo);
   const linhaPilulas = posicionar(criarElemento("div"), { position: "absolute", left: parametros.x + "px", width: parametros.largura + "px", top: (parametros.y + parametros.alturaImagem + 28) + "px", display: "flex", gap: "16px", justifyContent: parametros.centralizarPilulas ? "center" : "flex-start" });
   const pilulas = (parametros.pilulas || []).map(function (texto) {
@@ -676,76 +571,11 @@ modelos.imagem = function (parametros) {
   };
 };
 
-/* Ilustração gerada (ícone, objeto 3D, tag) em PNG com fundo transparente, flutuando sem moldura.
-   Parâmetros: src, x, y, largura; opcionais: fundoCheio, rotulo (acima), legenda (abaixo), pilulas,
-   flutuar (padrão true, sobe e desce 8 px), brilho (padrão true, halo verde atrás), atrasoEntrada (s). */
-modelos.ilustracao = function (parametros) {
-  const duracao = parametros.duracao;
-  const atrasoEntrada = parametros.atrasoEntrada || 0.1;
-  let fundo = null;
-  if (parametros.fundoCheio) { fundo = criarElemento("div", "fundo-cheio"); palco.appendChild(fundo); }
-  const grupo = posicionar(criarElemento("div"), { position: "absolute", left: parametros.x + "px", top: parametros.y + "px", width: parametros.largura + "px" });
-  let halo = null;
-  if (parametros.brilho !== false) {
-    halo = posicionar(criarElemento("div"), { position: "absolute", left: "10%", top: "10%", width: "80%", height: "80%", borderRadius: "50%",
-      background: "radial-gradient(circle, rgba(28,252,119,0.28), rgba(28,252,119,0) 70%)", filter: "blur(30px)" });
-    grupo.appendChild(halo);
-  }
-  const imagem = posicionar(criarElemento("img"), { position: "relative", display: "block", width: "100%", filter: "drop-shadow(0 24px 40px rgba(0,0,0,0.55))" });
-  imagem.src = parametros.src;
-  grupo.appendChild(imagem);
-  palco.appendChild(grupo);
-  let rotulo = null;
-  if (parametros.rotulo) {
-    rotulo = posicionar(criarElemento("div", "rotulo-mono rotulo-verde", parametros.rotulo), { position: "absolute", left: parametros.x + "px", width: parametros.largura + "px", textAlign: "center", top: (parametros.y - 40) + "px" });
-    palco.appendChild(rotulo);
-  }
-  const alturaEstimada = parametros.alturaImagem || parametros.largura;
-  let legenda = null;
-  if (parametros.legenda) {
-    legenda = posicionar(criarElemento("div", "titulo-grande", parametros.legenda.replace(/\*([^*]+)\*/g, '<span class="destaque">$1</span>')), { position: "absolute", left: (parametros.x - 200) + "px", width: (parametros.largura + 400) + "px", textAlign: "center",
-      top: (parametros.y + alturaEstimada + 24) + "px", fontSize: (parametros.tamanhoLegenda || 44) + "px", color: "var(--cor-texto)" });
-    palco.appendChild(legenda);
-  }
-  const linhaPilulas = posicionar(criarElemento("div"), { position: "absolute", left: (parametros.x - 300) + "px", width: (parametros.largura + 600) + "px",
-    top: (parametros.y + alturaEstimada + (legenda ? 96 : 28)) + "px", display: "flex", gap: "16px", justifyContent: "center" });
-  const pilulas = (parametros.pilulas || []).map(function (texto) {
-    const pilula = posicionar(criarElemento("div", "pilula", '<span class="ponto"></span><span>' + texto + "</span>"), { position: "relative", fontSize: "26px" });
-    linhaPilulas.appendChild(pilula);
-    return pilula;
-  });
-  palco.appendChild(linhaPilulas);
-  let marca = null;
-  if (parametros.fundoCheio) { marca = posicionar(criarElemento("div", "marca-dagua", MARCA_DAGUA), { right: "60px", bottom: "48px" }); palco.appendChild(marca); }
-
-  return function desenhar(tempo) {
-    const visibilidadeGeral = opacidadeEntradaSaida(tempo, duracao, 0.3, 0.35);
-    if (fundo) fundo.style.opacity = visibilidadeGeral;
-    const entrada = suavizarMola(progresso(tempo, atrasoEntrada, 0.6));
-    const flutuacao = parametros.flutuar === false ? 0 : Math.sin(tempo * 1.6) * 8;
-    grupo.style.opacity = Math.min(limitar(entrada * 1.4, 0, 1), visibilidadeGeral);
-    grupo.style.transform = "translateY(" + ((1 - entrada) * 40 + flutuacao) + "px) scale(" + interpolar(0.86, 1, entrada) + ")";
-    if (halo) halo.style.opacity = 0.75 + Math.sin(tempo * 2.2) * 0.25;
-    if (rotulo) rotulo.style.opacity = Math.min(progresso(tempo, atrasoEntrada + 0.3, 0.3), visibilidadeGeral);
-    if (legenda) {
-      const entradaLegenda = suavizarSaida(progresso(tempo, atrasoEntrada + 0.35, 0.45));
-      legenda.style.opacity = Math.min(entradaLegenda, visibilidadeGeral);
-      legenda.style.transform = "translateY(" + ((1 - entradaLegenda) * 18) + "px)";
-    }
-    pilulas.forEach(function (pilula, indice) {
-      const entradaPilula = suavizarMola(progresso(tempo, (parametros.inicioPilulas || atrasoEntrada + 0.8) + indice * 0.35, 0.5));
-      pilula.style.opacity = Math.min(limitar(entradaPilula * 1.6, 0, 1), visibilidadeGeral);
-      pilula.style.transform = "scale(" + interpolar(0.82, 1, entradaPilula) + ")";
-    });
-    if (marca) marca.style.opacity = visibilidadeGeral * 0.9;
-  };
-};
-
-/* Transição discreta: linha verde fina varrendo a tela sobre um escurecimento rápido. */
+/* Transição discreta: linha fina na cor de destaque varrendo a tela sobre um escurecimento rápido. */
 modelos.transicao = function (parametros) {
   const duracao = parametros.duracao;
-  const escurecimento = posicionar(criarElemento("div"), { position: "absolute", inset: "0", background: "#0A0A0A" });
-  const linhaVarredura = posicionar(criarElemento("div"), { position: "absolute", top: "0", bottom: "0", width: "3px", background: "var(--cor-verde)", boxShadow: "0 0 24px 4px rgba(28,252,119,0.55)" });
+  const escurecimento = posicionar(criarElemento("div"), { position: "absolute", inset: "0", background: "var(--cor-fundo)" });
+  const linhaVarredura = posicionar(criarElemento("div"), { position: "absolute", top: "0", bottom: "0", width: "3px", background: "var(--cor-destaque)", boxShadow: "0 0 24px 4px rgb(var(--cor-destaque-rgb) / 0.55)" });
   palco.appendChild(escurecimento);
   palco.appendChild(linhaVarredura);
   return function desenhar(tempo) {
@@ -760,7 +590,7 @@ modelos.transicao = function (parametros) {
 window.prepararMotion = async function (especificacao) {
   palco.innerHTML = "";
   await document.fonts.ready;
-  await Promise.all(["Space Grotesk", "Inter", "JetBrains Mono"].map(function (familia) {
+  await Promise.all(["Inter", "JetBrains Mono"].map(function (familia) {
     return Promise.all([400, 500, 700].map(function (peso) { return document.fonts.load(peso + " 40px '" + familia + "'").catch(function () {}); }));
   }));
   const construtor = modelos[especificacao.tipo];

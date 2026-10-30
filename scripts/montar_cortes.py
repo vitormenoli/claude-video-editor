@@ -214,6 +214,10 @@ def principal():
     silencios = carregar_silencios(caminho_silencios)
     decisoes = json.load(open(caminho_decisoes, encoding="utf-8"))
     duracao_bruto = decisoes["duracao_bruto"]
+    # Silêncio mínimo e respiro podem vir do decisoes.json (o preparar_video.py copia da configuração da pasta).
+    global LIMIAR_SILENCIO, RESPIRO
+    LIMIAR_SILENCIO = decisoes.get("silencio_minimo_s", LIMIAR_SILENCIO)
+    RESPIRO = decisoes.get("respiro_s", RESPIRO)
     correcoes_texto = [tuple(par) for par in decisoes.get("correcoes_texto", [])]
     trechos_protegidos = [(trecho["inicio"], trecho["fim"]) for trecho in decisoes.get("manter", [])]
 

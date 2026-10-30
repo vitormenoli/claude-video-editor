@@ -1,130 +1,46 @@
 {
- "_instrucoes": "Tempos em segundos do BRUTO. 'remover' = trechos que saem além dos automáticos (silêncio e gagueira). Use 'exato': true para não encaixar o corte no respiro mais próximo. 'manter' protege trechos de qualquer corte automático. 'correcoes_texto' = [regex, substituição] aplicadas só na legenda .srt e no cortes.csv.",
+ "_instrucoes": "Tempos em segundos do BRUTO. 'remover' = trechos que saem além dos automáticos (silêncio, gagueira e esperas). Fica sempre a ÚLTIMA versão de uma frase repetida. Use 'exato': true para não encaixar o corte no respiro mais próximo. 'manter' protege trechos de qualquer corte automático. 'correcoes_texto' = [errado, certo], aplicadas só na legenda, no cortes.csv e nos textos de conferência. 'silencio_minimo_s' e 'respiro_s' vêm do config_editor.json.",
  "duracao_bruto": 0.0,
+ "silencio_minimo_s": 0.45,
+ "respiro_s": 0.08,
  "remover": [
   {
-   "inicio": 0.0,
-   "fim": 0.0,
-   "motivo": "retomada: ..."
+   "inicio": 62.4,
+   "fim": 76.6,
+   "motivo": "3 tomadas de \"Eu vou testar antes e depois...\" (fica a última)",
+   "exato": true
+  },
+  {
+   "inicio": 170.3,
+   "fim": 172.5,
+   "motivo": "retomada: \"como ele vai se comportar, ou seja,\" (fica \"como ele se comporta\")",
+   "exato": true
+  },
+  {
+   "inicio": 302.5,
+   "fim": 305.45,
+   "motivo": "falso começo: \"Então, pra descobrir isso, eu vou abrir um...\""
   }
  ],
- "manter": [],
+ "manter": [
+  {
+   "inicio": 28.3,
+   "fim": 33.6,
+   "motivo": "fala baixa que a transcrição não pegou"
+  }
+ ],
  "correcoes_texto": [
   [
    "Cloud Code",
    "Claude Code"
   ],
   [
-   "cloud code",
-   "Claude Code"
+   "fefe em pegue",
+   "FFmpeg"
   ],
   [
-   "Menorio",
-   "Menoli"
-  ],
-  [
-   "80 %",
-   "80%"
-  ],
-  [
-   "uvversion",
-   "uv --version"
-  ],
-  [
-   "uv to install",
-   "uv tool install"
-  ],
-  [
-   "Graphify menos menos version",
-   "graphify --version"
-  ],
-  [
-   "Sony 5",
-   "Sonnet 5.5"
-  ],
-  [
-   "cachê",
-   "cache"
-  ],
-  [
-   "Claudio",
-   "Claude"
-  ],
-  [
-   "barra ghost",
-   "barra cost"
-  ],
-  [
-   "Cláudio",
-   "Claude"
-  ],
-  [
-   "nosso cloud",
-   "nosso Claude"
-  ],
-  [
-   "o cloud",
-   "o Claude"
-  ],
-  [
-   "seu cloud",
-   "seu Claude"
-  ],
-  [
-   "cloud \\.md",
-   "CLAUDE.md"
-  ],
-  [
-   "arquivo \\.cloud",
-   "arquivo .claude"
-  ],
-  [
-   "Graph \\.HTML",
-   "graph.html"
-  ],
-  [
-   "Graph HTML",
-   "graph.html"
-  ],
-  [
-   "back -end",
-   "back-end"
-  ],
-  [
-   "front -end",
-   "front-end"
-  ],
-  [
-   "agente de A,",
-   "agente de IA,"
-  ],
-  [
-   "100 %",
-   "100%"
-  ],
-  [
-   "40 %",
-   "40%"
-  ],
-  [
-   "Cloud Code",
-   "Claude Code"
-  ],
-  [
-   "(?<!em )\\bcloud\\b",
-   "Claude"
-  ],
-  [
-   "o Cloud realmente",
-   "o Claude realmente"
-  ],
-  [
-   "o Cloud$",
-   "o Claude"
-  ],
-  [
-   "Eu, eu garanti",
-   "Eu garanti"
+   "git rub",
+   "GitHub"
   ]
  ]
 }

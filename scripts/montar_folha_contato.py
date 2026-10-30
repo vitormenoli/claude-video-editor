@@ -43,7 +43,7 @@ def principal():
         if motion["tipo"] == "transicao":
             continue
         nome = motion["arquivo"][:-5]
-        indice_quadro = indice_padrao if indice_padrao is not None else (4 if motion["tipo"] in ("painel", "numero", "abertura", "ilustracao", "comparacao") else 3)
+        indice_quadro = indice_padrao if indice_padrao is not None else (4 if motion["tipo"] in ("painel", "numero", "abertura", "comparacao") else 3)
         camada_motion = Image.open(f"{pasta_previa}/{nome}_{indice_quadro}.png").convert("RGBA")
         tempo_fonte = saida_para_fonte(motion["inicio"] + motion["duracao"] * 0.6, mapa)
         fundo = quadro_do_bruto(caminho_bruto, tempo_fonte)

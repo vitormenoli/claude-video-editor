@@ -1,6 +1,6 @@
 # Rodando com o vídeo no computador do usuário e o Claude na nuvem
 
-Foi assim que os primeiros vídeos foram editados: o Claude trabalha num ambiente na nuvem (com internet limitada, Python, FFmpeg e Playwright) ligado ao computador do usuário pelo app do Claude, que dá um shell remoto nas pastas conectadas.
+Use este modo quando o Claude trabalha num ambiente na nuvem (com internet limitada, Python, FFmpeg e Playwright) ligado ao computador do usuário pelo app do Claude, com um shell remoto nas pastas conectadas.
 
 ## Limites do shell remoto
 - Cada comando morre em **45 s**, e processos em segundo plano morrem junto com o comando.
@@ -11,7 +11,7 @@ Foi assim que os primeiros vídeos foram editados: o Claude trabalha num ambient
 | Onde | O quê |
 |---|---|
 | Nuvem | transcrições (Whisper), cortes, planejamento, render dos motions (Playwright), folha de contato, legenda |
-| Computador | extração do áudio, áudio em etapas (`cortar`, `medir`, `tratar`, `mixar`, `codificar`, uma por comando), render das partes de 40 s (uma por comando, ~15 a 25 s cada), junção final e conferências |
+| Computador | `configurar_pasta.py` e `preparar_video.py` (assim os caminhos do `configuracao_video.json` já são os do computador), áudio em etapas (`cortar`, `medir`, `tratar`, `mixar`, `codificar`, uma por comando), render das partes de 40 s (uma por comando, ~15 a 25 s cada), junção final e conferências |
 
 ## Levar e trazer arquivos
 - **Computador → nuvem:** `device_stage_files` (até 400 MB por arquivo). Leve só o `voz_16k.flac`, nunca o bruto inteiro.
@@ -19,6 +19,7 @@ Foi assim que os primeiros vídeos foram editados: o Claude trabalha num ambient
 - Caminhos: no `device_stage_files`/`device_commit_files` use o caminho do Windows (`C:\Users\...`); no shell remoto, `~/mnt/<pasta>`; no `plano.json`, o caminho absoluto do shell remoto (`/sessions/<sessão>/mnt/<pasta>/...`).
 
 ## Dicas
+- O `montar_video_final.py` não serve aqui (passa do limite de tempo): rode `montar_audio.py plano.json <etapa>`, `renderizar_parte.py plano.json N` e `juntar_final.py` separadamente.
 - Para ver um quadro do bruto, gere um JPG pequeno no computador (`ffmpeg -ss T -i bruto.mp4 -frames:v 1 -vf scale=960:540 q.jpg`) e traga com `device_stage_files`.
 - Nomes de arquivo com acento podem vir em NFD e o caminho literal falha: use cópias sem acento.
 - O `freezedetect` em 1080p não cabe em 45 s: rode em pedaços de 140 s com `scale=480:270`.
